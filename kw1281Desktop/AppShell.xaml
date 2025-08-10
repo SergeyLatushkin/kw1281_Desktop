@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="kw1281Desktop.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:pages="clr-namespace:kw1281Desktop.Pages"
+    Shell.FlyoutBehavior="Flyout">
+
+    <ShellContent
+        Title="App settings"
+        Icon="{StaticResource IconAppSettings}"
+        ContentTemplate="{DataTemplate pages:AppSettingsPage}"
+        Route="appSettings" />
+
+    <ShellContent
+        Title="Read fault codes"
+        Icon="{StaticResource IconBugs}"
+        ContentTemplate="{DataTemplate pages:ReadFaultCodesPage}"
+        Route="readFaultCodes" />
+
+    <ShellContent
+        Title="Autoscan"
+        Icon="{StaticResource IconAutoscan}"
+        ContentTemplate="{DataTemplate pages:AutoscanPage}"
+        Route="autoscan" />
+
+    <ShellContent
+        Title="Dump/read/load control units"
+        Icon="{StaticResource IconDump}"
+        ContentTemplate="{DataTemplate pages:DumpPage}"
+        Route="dump" />
+
+    <ShellContent
+        Title="Adaptation"
+        Icon="{StaticResource IconAdaptation}"
+        ContentTemplate="{DataTemplate pages:AdaptationPage}"
+        Route="adaptation" />
+
+    <ShellContent
+        Title="Utils"
+        Icon="{StaticResource IconUtils}"
+        ContentTemplate="{DataTemplate pages:UtilsPage}"
+        Route="utils" />
+</Shell>

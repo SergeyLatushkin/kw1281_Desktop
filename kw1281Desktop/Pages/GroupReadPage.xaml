@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns:viewModels="clr-namespace:kw1281Desktop.PageModels"
+             xmlns:models="clr-namespace:kw1281Desktop.Models"
+             x:DataType="viewModels:GroupReadPageViewModel"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:kw1281Desktop.Behaviors"
+             x:Class="kw1281Desktop.Pages.GroupReadPage"
+             Title="Read groups">
+
+    <Grid RowSpacing="10" Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+
+        <CollectionView Grid.Row="0" ItemsSource="{Binding Rows}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <HorizontalStackLayout Spacing="10" Padding="10" VerticalOptions="End">
+
+                        <Entry x:DataType="models:GroupRowModel"
+                            WidthRequest="80"
+                            Keyboard="Numeric"
+                            Placeholder="0-255"
+                            MaxLength="3"
+                            Text="{Binding Input, Mode=TwoWay}"
+                            VerticalOptions="End" >
+                            <Entry.Behaviors>
+                                <behaviors:NumericRangeBehavior Min="0" Max="255" />
+                            </Entry.Behaviors>
+                        </Entry >
+                        <Button x:DataType="models:GroupRowModel"
+                                Text="Start"
+                                WidthRequest="100"
+                                Command="{Binding StartCommand}"
+                                VerticalOptions="End"
+                                IsVisible="{Binding IsNotRunning}" />
+                        <Button x:DataType="models:GroupRowModel"
+                                Text="Cancel"
+                                WidthRequest="100"
+                                Command="{Binding CancelCommand}"
+                                VerticalOptions="End"
+                                IsVisible="{Binding IsRunning}" />
+                        <CollectionView x:DataType="models:GroupRowModel"
+                                        ItemsSource="{Binding Fields}"
+                                        ItemsLayout="HorizontalList"
+                                        VerticalOptions="End">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:FieldItem"  >
+                                    <VerticalStackLayout WidthRequest="200" Padding="5" Spacing="2" VerticalOptions="End">
+                                        <Label Text="{Binding Key}" HorizontalOptions="Center" />
+                                        <Entry Text="{Binding Value, Mode=OneWay}" IsEnabled="False" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </HorizontalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Border Grid.Row="1" Stroke="Gray" StrokeThickness="1" BackgroundColor="#f0f0f0" Padding="10"
+                IsVisible="{Binding ShowLogs, Mode=OneWay}">
+            <ScrollView x:Name="ScrollView">
+                <VerticalStackLayout x:Name="LogContainer" Spacing="2" />
+            </ScrollView>
+        </Border>
+        <HorizontalStackLayout Grid.Row="2" >
+            <CheckBox IsChecked="{Binding IsBasicSetting}" />
+            <Label Text="Basic setting" VerticalOptions="Center" />
+        </HorizontalStackLayout>
+    </Grid>
+</ContentPage>

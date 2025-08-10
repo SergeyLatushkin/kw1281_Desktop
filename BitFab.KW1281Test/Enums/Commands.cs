@@ -1,0 +1,40 @@
+﻿namespace BitFab.KW1281Test.Enums
+{
+    public enum Commands
+    {
+        ActuatorTest,
+        AdaptationRead,
+        AdaptationSave,
+        AdaptationTest,
+        AutoScan,
+        BasicSetting,
+        ClarionVWPremium4SafeCode,
+        ClearFaultCodes,
+        DelcoVWPremium5SafeCode,
+        DumpRBxMem,
+        DumpRBxMemOdd,
+        DumpEdc15Eeprom,
+        DumpEeprom,
+        DumpMarelliMem,
+        DumpMem,
+        DumpRam,
+        DumpCcmRom,
+        DumpClusterNecRom,
+        FindLogins,
+        GetSKC,
+        GroupRead,
+        LoadEeprom,
+        MapEeprom,
+        ReadFaultCodes,
+        ReadIdent,
+        ReadEeprom,
+        ReadRAM,
+        ReadROM,
+        ReadSoftwareVersion,
+        Reset,
+        SetSoftwareCoding,
+        ToggleRB4Mode,
+        WriteEdc15Eeprom,
+        WriteEeprom
+    }
+}

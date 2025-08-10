@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kw1281Desktop", "kw1281Desktop\kw1281Desktop.csproj", "{4D3F602A-80EB-4D1A-B8A6-B0D2BF7F76F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitFab.KW1281Test", "BitFab.KW1281Test\BitFab.KW1281Test.csproj", "{40415F38-E979-4258-9DA8-6416CD8685B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D3F602A-80EB-4D1A-B8A6-B0D2BF7F76F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D3F602A-80EB-4D1A-B8A6-B0D2BF7F76F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D3F602A-80EB-4D1A-B8A6-B0D2BF7F76F1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{4D3F602A-80EB-4D1A-B8A6-B0D2BF7F76F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D3F602A-80EB-4D1A-B8A6-B0D2BF7F76F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40415F38-E979-4258-9DA8-6416CD8685B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40415F38-E979-4258-9DA8-6416CD8685B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40415F38-E979-4258-9DA8-6416CD8685B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40415F38-E979-4258-9DA8-6416CD8685B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4B5EE11-B0F8-4FD4-A120-CB80FA695C06}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "kw1281test": {
+      "commandName": "Project",
+      "commandLineArgs": "COM3\r\n9600\r\n1\r\nReadFaultCodes\r\n"
+    }
+  }
+}

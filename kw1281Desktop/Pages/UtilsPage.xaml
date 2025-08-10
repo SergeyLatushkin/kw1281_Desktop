@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns:viewModels="clr-namespace:kw1281Desktop.PageModels"
+             x:DataType="viewModels:UtilsPageViewModel"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:kw1281Desktop.Behaviors"
+             xmlns:converters="clr-namespace:kw1281Desktop.Converters"
+             xmlns:models="clr-namespace:kw1281Desktop.Models"
+             xmlns:vm="clr-namespace:kw1281Desktop.PageModels"
+             x:Class="kw1281Desktop.Pages.UtilsPage"
+             Title="Utils">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:EnumEqualsConverter x:Key="EnumEqualsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Padding="20" RowSpacing="10" ColumnSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="4*" />
+        </Grid.ColumnDefinitions>
+
+        <Picker Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                WidthRequest="300" ItemsSource="{Binding Addresses}" SelectedItem="{Binding SelectedAddress}"
+                ItemDisplayBinding="{Binding Name}" />
+
+        <ScrollView Grid.Row="1" Grid.Column="0">
+            <VerticalStackLayout Spacing="10">
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="1.   Actuator test" VerticalOptions="Center"
+                                 IsEnabled="False" />
+                    <!--IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=ActuatorTest}"-->
+
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="2.   Set software coding" VerticalOptions="Center"
+                                 IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=SetSoftwareCoding}" />
+                    <Entry WidthRequest="120" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                           Keyboard="Numeric" Placeholder="Code" Text="{Binding CodeWorkshop.Value1, Mode=TwoWay}" >
+                        <Entry.Behaviors>
+                            <behaviors:NumericRangeBehavior Min="0" Max="99999" />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Entry WidthRequest="120" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                           Keyboard="Numeric" Placeholder="WShop" Text="{Binding CodeWorkshop.Value2, Mode=TwoWay}" >
+                        <Entry.Behaviors>
+                            <behaviors:NumericRangeBehavior Min="0" Max="99999" />
+                        </Entry.Behaviors>
+                    </Entry>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="3.   Find logins" VerticalOptions="Center"
+                                 IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=FindLogins}" />
+                    <Entry WidthRequest="120" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                           Keyboard="Numeric" Placeholder="Login" Text="{Binding Login, Mode=TwoWay}">
+                        <Entry.Behaviors>
+                            <behaviors:NumericRangeBehavior Min="0" Max="65535" />
+                        </Entry.Behaviors>
+                    </Entry>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="4.   Read software version" VerticalOptions="Center"
+                          IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=ReadSoftwareVersion}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="5.   Clarion VW Premium 4 safe code" VerticalOptions="Center"
+                          IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=ClarionVWPremium4SafeCode}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="6.   Delco VW Premium 5 safe code" VerticalOptions="Center"
+                          IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=DelcoVWPremium5SafeCode}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="7.   Get secret key code" VerticalOptions="Center"
+                          IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=GetSKC}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="8.   Read ident" VerticalOptions="Center"
+                          IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=ReadIdent}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="9.   Toggle RB4 mode" VerticalOptions="Center"
+                          IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=ToggleRB4Mode}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="10" >
+                    <RadioButton GroupName="CommandGroup" Content="10. Write Eeprom" VerticalOptions="Center"
+                                 IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=WriteEeprom}" />
+                    <Entry WidthRequest="120" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                           Keyboard="Numeric" Placeholder="Address" Text="{Binding AddressValue.Value1, Mode=TwoWay}" >
+                        <Entry.Behaviors>
+                            <behaviors:NumericRangeBehavior Min="0" Max="511" />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Entry WidthRequest="120" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                           Keyboard="Numeric" Placeholder="Value" Text="{Binding AddressValue.Value2, Mode=TwoWay}" >
+                        <Entry.Behaviors>
+                            <behaviors:NumericRangeBehavior Min="0" Max="255" />
+                        </Entry.Behaviors>
+                    </Entry>
+                </HorizontalStackLayout>
+
+                <VerticalStackLayout Spacing="10">
+                    <RadioButton GroupName="CommandGroup" Content="10. Write Edc15Eeprom" VerticalOptions="Center"
+                                 IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=WriteEdc15Eeprom}" />
+                    <CollectionView ItemsSource="{Binding AddressValuePairs}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ObservableAddressValuePair">
+                                <HorizontalStackLayout Spacing="10" >
+                                    <Entry WidthRequest="120" Text="{Binding Address}" Placeholder="Address"
+                                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Keyboard="Numeric" >
+                                        <Entry.Behaviors>
+                                            <behaviors:NumericRangeBehavior Min="0" Max="9999" />
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                    <Entry WidthRequest="120" Text="{Binding Value}" Placeholder="Value"
+                                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Keyboard="Numeric" >
+                                        <Entry.Behaviors>
+                                            <behaviors:NumericRangeBehavior Min="0" Max="9999" />
+                                        </Entry.Behaviors>
+                                    </Entry>
+
+                                    <ImageButton BackgroundColor="Transparent" BorderColor="Transparent"
+                                                 Source="{StaticResource IconRemove}" Clicked="OnDeleteClicked"
+                                                 IsVisible="{Binding IsNotVisible}" />
+                                    <ImageButton BackgroundColor="Transparent" BorderColor="Transparent"
+                                                 Source="{StaticResource IconAddS}" Clicked="OnAddClicked"
+                                                 IsVisible="{Binding IsVisible}" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Border Grid.Row="1" Grid.Column="1" Stroke="Gray" StrokeThickness="1" BackgroundColor="#f0f0f0"
+                Padding="10">
+            <ScrollView x:Name="ScrollView">
+                <VerticalStackLayout x:Name="LogContainer" Spacing="2" />
+            </ScrollView>
+        </Border>
+
+        <Button Grid.Row="2" Grid.Column="0" Text="Run" WidthRequest="90" HorizontalOptions="Start"
+                Command="{Binding RunCommand}" />
+
+        <!--<StackLayout Grid.Row="2" Grid.Column="1" >
+            <HorizontalStackLayout Spacing="10">
+                <Label Text="Result: " VerticalOptions="Center" />
+                <Entry Text="{Binding Result, Mode=OneWay}" IsEnabled="False" WidthRequest="200"/>
+            </HorizontalStackLayout>
+        </StackLayout>-->
+    </Grid>
+</ContentPage>

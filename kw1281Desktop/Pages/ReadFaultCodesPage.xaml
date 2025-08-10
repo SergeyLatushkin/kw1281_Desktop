@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns:viewModels="clr-namespace:kw1281Desktop.PageModels"
+             x:DataType="viewModels:ReadFaultCodesPageViewModel"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="kw1281Desktop.Pages.ReadFaultCodesPage"
+             Title="Read fault codes">
+
+    <Grid Padding="20" RowSpacing="10" ColumnSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Picker Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Addresses}" SelectedItem="{Binding SelectedAddress}"
+                ItemDisplayBinding="{Binding Name}" />
+        <Button
+            Grid.Row="0"
+            Grid.Column="1"
+            Text="Read"
+            Command="{Binding ReadClearCommand}"
+            CommandParameter="ReadFaultCodes" />
+        <Button
+            Grid.Row="0"
+            Grid.Column="2"
+            Text="Clear"
+            Command="{Binding ReadClearCommand}"
+            CommandParameter="ClearFaultCodes" />
+        <Button
+            Grid.Row="0"
+            Grid.Column="3"
+            Text="Read Group"
+            Command="{Binding GoToGroupCommand}" />
+        <Border Grid.Row="1" Grid.ColumnSpan="4" Stroke="Gray" StrokeThickness="1" BackgroundColor="#f0f0f0"
+                Padding="10">
+            <ScrollView x:Name="ScrollView">
+                <VerticalStackLayout x:Name="LogContainer" Spacing="2" />
+            </ScrollView>
+        </Border>
+
+        <Label Grid.Row="2"
+               Grid.ColumnSpan="4"
+               Text="Error code decoding"
+               TextColor="Blue"
+               TextDecorations="Underline">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnLinkTapped" NumberOfTapsRequired="1" />
+            </Label.GestureRecognizers>
+        </Label>
+    </Grid>
+</ContentPage>

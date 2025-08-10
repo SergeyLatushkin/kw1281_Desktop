@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns:viewModels="clr-namespace:kw1281Desktop.PageModels"
+             x:DataType="viewModels:DumpPageViewModel"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="kw1281Desktop.Pages.DumpPage"
+             Title="Dump/read/load control units">
+
+    <Grid Padding="20" RowSpacing="10" ColumnSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Picker Grid.Row="0"
+                Grid.Column="0"
+                ItemsSource="{Binding Addresses}"
+                SelectedItem="{Binding SelectedAddress}"
+                ItemDisplayBinding="{Binding Name}" />
+        <Picker Grid.Row="0"
+                Grid.Column="1"
+                ItemsSource="{Binding DumpCommands}"
+                SelectedItem="{Binding SelectedDump}"
+                ItemDisplayBinding="{Binding Name}" />
+        <Entry Grid.Row="0"
+               Grid.Column="2"
+               Placeholder="Start"
+               Text="{Binding Start, Mode=TwoWay}"
+               IsEnabled="{Binding IsStartFieldEnabled}" />
+        <Entry Grid.Row="0"
+               Grid.Column="3"
+               Placeholder="Lenght"
+               Text="{Binding Lenght, Mode=TwoWay}"
+               IsEnabled="{Binding IsLenghtFieldEnabled}" />
+        <Button Grid.Row="0"
+                Grid.Column="4"
+                Text="Run"
+                Command="{Binding ReadCommand}" />
+
+        <Button Grid.Row="1"
+                Grid.Column="0"
+                WidthRequest="80"
+                ImageSource="{StaticResource IconFolder}"
+                Command="{Binding ChooseCommand}"
+                HorizontalOptions="Start" />
+        <Entry Grid.Row="1"
+               Grid.Column="0"
+               Grid.ColumnSpan="5"
+               Margin="90,0,0,0"
+               Placeholder="Path"
+               Text="{Binding FilePath, Mode=TwoWay}"
+               IsEnabled="False" />
+
+        <Border Grid.Row="2" Grid.ColumnSpan="5" Stroke="Gray" StrokeThickness="1" BackgroundColor="#f0f0f0"
+                Padding="10">
+            <ScrollView x:Name="ScrollView">
+                <VerticalStackLayout x:Name="LogContainer" Spacing="2" />
+            </ScrollView>
+        </Border>
+
+        <Button Grid.Row="3"
+                Grid.Column="0"
+                WidthRequest="100"
+                Text="Reset"
+                Command="{Binding ResetCommand}"
+                HorizontalOptions="Start" />
+    </Grid>
+</ContentPage>
