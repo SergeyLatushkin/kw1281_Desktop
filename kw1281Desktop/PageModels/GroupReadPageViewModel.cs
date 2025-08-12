@@ -1,7 +1,7 @@
 ﻿using BitFab.KW1281Test;
+using BitFab.KW1281Test.Actions;
+using BitFab.KW1281Test.Actions.Records;
 using BitFab.KW1281Test.Enums;
-using BitFab.KW1281Test.Messengers;
-using BitFab.KW1281Test.Messengers.Records;
 using kw1281Desktop.Converters;
 using kw1281Desktop.Models;
 using kw1281Desktop.Models.Base;
@@ -63,7 +63,7 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
             return;
         }
 
-        await Task.Run(() =>
+        await Task.Run(async() =>
         {
             if (row.Input.Equals("0"))
             {
@@ -92,7 +92,7 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
                 Messenger.Instance.MessageReceived += OnGrupMessageReceived;
             }
 
-            _diagnostic.Run(
+            await _diagnostic.Run(
                 AppSettings.Port!,
                 AppSettings.Baud,
                 Address,

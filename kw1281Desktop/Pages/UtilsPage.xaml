@@ -34,9 +34,7 @@
             <VerticalStackLayout Spacing="10">
                 <HorizontalStackLayout Spacing="10">
                     <RadioButton GroupName="CommandGroup" Content="1.   Actuator test" VerticalOptions="Center"
-                                 IsEnabled="False" />
-                    <!--IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=ActuatorTest}"-->
-
+                                 IsChecked="{Binding SelectedCommand, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=ActuatorTest}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="10">

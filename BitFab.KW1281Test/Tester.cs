@@ -1,7 +1,8 @@
-﻿using BitFab.KW1281Test.Cluster;
+﻿using BitFab.KW1281Test.Actions;
+using BitFab.KW1281Test.Cluster;
 using BitFab.KW1281Test.Interface;
 using BitFab.KW1281Test.Interface.EDC15;
-using BitFab.KW1281Test.Messengers;
+using BitFab.KW1281Test.Models;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
@@ -60,34 +61,27 @@ namespace BitFab.KW1281Test
             _kwp1281.EndCommunication();
         }
 
-        // Begin top-level commands
-
-        public void ActuatorTest()
+        public async Task ActuatorTestAsync(ActuatorTestControl control)
         {
             using KW1281KeepAlive keepAlive = new(_kwp1281);
 
-            ConsoleKeyInfo keyInfo;
-            do
+            while (!control.StopRequested)
             {
                 var response = keepAlive.ActuatorTest(0x00);
+
                 if (response == null || response.ActuatorName == "End")
                 {
-                    Mc.AddLine("End of test.");
                     break;
                 }
-                Mc.AddLine($"Actuator Test: {response.ActuatorName}");
 
-                // Press any key to advance to next test or press Q to exit
-                Mc.AddLine("Press 'N' to advance to next test or 'Q' to quit");
-                do
+                Ds.Send($"Actuator Test: {response.ActuatorName}");
+
+                bool next = await control.WaitForNextStepAsync();
+                if (!next)
                 {
-                    keyInfo = Console.ReadKey(intercept: true); //TODO ---- Console
+                    break;
                 }
-                while (keyInfo.Key != ConsoleKey.N && keyInfo.Key != ConsoleKey.Q);
-
-                Mc.AddLine();
             }
-            while (keyInfo.Key != ConsoleKey.Q);
         }
 
         public void AdaptationRead(byte channel, ushort? login, int workshopCode)

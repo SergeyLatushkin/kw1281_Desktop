@@ -1,11 +1,10 @@
 using BitFab.KW1281Test;
+using BitFab.KW1281Test.Actions;
+using BitFab.KW1281Test.Actions.Records;
 using BitFab.KW1281Test.Enums;
-using BitFab.KW1281Test.Messengers;
-using BitFab.KW1281Test.Messengers.Records;
 using kw1281Desktop.Converters;
 using kw1281Desktop.Models;
 using kw1281Desktop.Models.Base;
-using Microsoft.VisualBasic.Logging;
 using System.Collections.ObjectModel;
 
 namespace kw1281Desktop.PageModels;
@@ -20,6 +19,9 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
 
     protected BaseScanViewPageModel(Diagnostic diagnostic, IErrorHandler errorHandler)
     {
+        var route = Shell.Current.CurrentState.Location.ToString();
+        AppSettingsStorage.Save("page", route);
+
         ErrorHandler = errorHandler;
         Diagnostic = diagnostic;
     }
@@ -45,18 +47,18 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
     protected async Task ExecuteReadInBackgroundWithLogDescription(string controllerAddress,
         Commands command, bool forceLogsOn = false, params string[] args)
     {
-        await Task.Run(() =>
+        await Task.Run(async() =>
         {
             if (!forceLogsOn && !AppSettings.Logging)
             {
-                Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
+                await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
 
                 return;
             }
 
             Messenger.Instance.MessageReceived += OnLogReceived;
 
-            Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
+            await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
 
             Messenger.Instance.MessageReceived -= OnLogReceived;
         });

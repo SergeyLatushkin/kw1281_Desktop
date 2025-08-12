@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace BitFab.KW1281Test.Messengers.Records
+namespace BitFab.KW1281Test.Actions.Records
 {
     public record TextLine
     {

@@ -1,7 +1,7 @@
-﻿using BitFab.KW1281Test.Messengers.Records;
+﻿using BitFab.KW1281Test.Actions.Records;
 using System.Drawing;
 
-namespace BitFab.KW1281Test.Messengers;
+namespace BitFab.KW1281Test.Actions;
 
 public sealed class Messenger
 {

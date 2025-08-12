@@ -1,5 +1,5 @@
-﻿using BitFab.KW1281Test.Kwp2000;
-using BitFab.KW1281Test.Messengers;
+﻿using BitFab.KW1281Test.Actions;
+using BitFab.KW1281Test.Kwp2000;
 using Service = BitFab.KW1281Test.Kwp2000.DiagnosticService;
 
 namespace BitFab.KW1281Test.Cluster
@@ -17,7 +17,7 @@ namespace BitFab.KW1281Test.Cluster
         {
             uint address = optionalAddress ?? 0x10400;
             uint length = optionalLength ?? 0x400;
-            string filename = optionalFileName ?? $"RBx_${address:X6}_mem.bin";
+            string filename = optionalFileName ?? $"RBx_0x{address:X6}_mem.bin";
 
             _kwp2000.DumpMem(address, length, filename);
 

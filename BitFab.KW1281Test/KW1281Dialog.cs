@@ -1,5 +1,5 @@
-﻿using BitFab.KW1281Test.Blocks;
-using BitFab.KW1281Test.Messengers;
+﻿using BitFab.KW1281Test.Actions;
+using BitFab.KW1281Test.Blocks;
 using System.Linq;
 using System.Text;
 
@@ -722,10 +722,12 @@ namespace BitFab.KW1281Test
                 groupNumber ];
             SendBlock(bytes);
 
+            IEnumerable<KeyValuePair<byte, string>> result;
+
             Block responseBlock = ReceiveBlock();
             if (responseBlock is NakBlock)
             {
-                List<KeyValuePair<byte, string>> result = [ new KeyValuePair<byte, string>(0,$"Not Available") ];
+                result = [ new KeyValuePair<byte, string>(0,$"Not Available") ];
                 Ds.Send(result);
             }
             else if (responseBlock is GroupReadResponseWithTextBlock groupReadResponseWithText)
@@ -735,7 +737,7 @@ namespace BitFab.KW1281Test
             }
             else if (responseBlock is GroupReadResponseBlock groupReading)
             {
-                IEnumerable<KeyValuePair<byte, string>> result = groupReading.SensorValues
+                result = groupReading.SensorValues
                     .Select(group => new KeyValuePair<byte, string>(group.SensorID, group.ToString()));
 
                 Ds.Send(result);
@@ -747,12 +749,12 @@ namespace BitFab.KW1281Test
                     var sb = new StringBuilder(textBlock.GetText(rawData.Body[0]));
                     sb.Append(Utils.DumpDecimal(rawData.Body.Skip(1)));
 
-                    List<KeyValuePair<byte, string>> result = [ new KeyValuePair<byte, string>(0,sb.ToString()) ];
+                    result = [ new KeyValuePair<byte, string>(0,sb.ToString()) ];
                     Ds.Send(result);
                 }
                 else
                 {
-                    List<KeyValuePair<byte, string>> result = [ new KeyValuePair<byte, string>(0, rawData.ToString()) ];
+                    result = [ new KeyValuePair<byte, string>(0, rawData.ToString()) ];
                     Ds.Send(result);
                 }
             }

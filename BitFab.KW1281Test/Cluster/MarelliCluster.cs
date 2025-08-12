@@ -1,4 +1,4 @@
-﻿using BitFab.KW1281Test.Messengers;
+﻿using BitFab.KW1281Test.Actions;
 
 namespace BitFab.KW1281Test.Cluster
 {

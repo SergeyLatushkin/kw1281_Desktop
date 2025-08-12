@@ -1,4 +1,4 @@
-namespace kw1281Desktop.Services
+namespace kw1281Desktop.Services.implementation
 {
     /// <summary>
     /// Modal Error Handler.

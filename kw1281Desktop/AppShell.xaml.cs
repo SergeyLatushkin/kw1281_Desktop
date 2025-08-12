@@ -47,7 +47,14 @@ namespace kw1281Desktop
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await Current.GoToAsync("//appSettings");
+
+            Dictionary<string, object>? loaded = AppSettingsStorage.Load();
+
+            string? page = loaded != null && loaded.TryGetValue("page", out var res)
+                ? res.ToString()
+                : AppSettings.PageDefault;
+
+            await Current.GoToAsync(page);
         }
 
         private void SfSegmentedControl_SelectionChanged(object sender, Syncfusion.Maui.Toolkit.SegmentedControl.SelectionChangedEventArgs e)

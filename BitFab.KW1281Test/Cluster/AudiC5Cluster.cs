@@ -1,7 +1,7 @@
 using System.IO.Ports;
 using System.Text;
+using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Blocks;
-using BitFab.KW1281Test.Messengers;
 
 namespace BitFab.KW1281Test.Cluster;
 

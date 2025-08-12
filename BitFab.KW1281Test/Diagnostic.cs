@@ -1,7 +1,8 @@
-﻿using BitFab.KW1281Test.Enums;
+﻿using BitFab.KW1281Test.Actions;
+using BitFab.KW1281Test.Enums;
 using BitFab.KW1281Test.Interface;
 using BitFab.KW1281Test.Interface.EDC15;
-using BitFab.KW1281Test.Messengers;
+using BitFab.KW1281Test.Models;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -17,10 +18,10 @@ public class Diagnostic
     DataSender Ds = DataSender.Instance;
 
     public CancellationTokenSource Cts { get; } = new();
-
+    public static ActuatorTestControl Control { get; } = new();
     internal static List<string> CommandAndArgs { get; private set; } = [];
 
-    public void Run(string portName, int baudRate, string controllerAddressStr, Commands command,
+    public async Task Run(string portName, int baudRate, string controllerAddressStr, Commands command,
         params string[] args)
     {
         try
@@ -171,6 +172,7 @@ public class Diagnostic
 
             try
             {
+                await Task.Delay(3000);
                 ecuInfo = tester.Kwp1281Wakeup();
             }
             catch (UnableToProceedException)
@@ -181,7 +183,7 @@ public class Diagnostic
             switch (command)
             {
                 case Commands.ActuatorTest:
-                    tester.ActuatorTest(); //TODO console -> desktop
+                    await tester.ActuatorTestAsync(Control);
                     break;
                 case Commands.AdaptationRead:
                     tester.AdaptationRead(channel, login, ecuInfo.WorkshopCode);

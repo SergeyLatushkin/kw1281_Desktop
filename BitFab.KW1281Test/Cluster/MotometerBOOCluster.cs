@@ -1,5 +1,5 @@
-﻿using BitFab.KW1281Test.Blocks;
-using BitFab.KW1281Test.Messengers;
+﻿using BitFab.KW1281Test.Actions;
+using BitFab.KW1281Test.Blocks;
 
 namespace BitFab.KW1281Test.Cluster
 {
@@ -48,9 +48,7 @@ namespace BitFab.KW1281Test.Cluster
         private bool SendCustom(int first, int second)
         {
             _kwp1281.SendBlock(new List<byte> { 0x1B, (byte)first, (byte)second });
-            var blocks = _kwp1281.ReceiveBlocks();
-
-            var block = blocks.FirstOrDefault();
+            var block = _kwp1281.ReceiveBlocks().FirstOrDefault();
 
             if (block is NakBlock)
             {
@@ -102,15 +100,14 @@ namespace BitFab.KW1281Test.Cluster
         {
             uint address = optionalAddress ?? 0;
             uint length = optionalLength ?? 0x100;
-            string filename = optionalFileName ?? $"BOO_${address:X6}_eeprom.bin";
+            string filename = optionalFileName ?? $"BOOMM0_0x{address:X6}_eeprom.bin";
 
 #if false
-            var ident = _kwp1281.ReadIdent();
-            var identInfo = ident.First().ToString()
-                .Split(Environment.NewLine).First() // Sometimes ReadIdent() can return multiple lines
-                .Replace(' ', '_');
+            var identInfo = _kwp1281.ReadIdent().First().ToString()
+            .Split(Environment.NewLine).First() // Sometimes ReadIdent() can return multiple lines
+            .Replace(' ', '_');
 
-            var dumpFileName = filename ?? $"{identInfo}_${startAddress:X4}_eeprom.bin";
+            var dumpFileName = filename ?? $"{identInfo}_0x{startAddress:X4}_eeprom.bin";
             foreach (var c in Path.GetInvalidFileNameChars())
             {
                 dumpFileName = dumpFileName.Replace(c, 'X');
@@ -134,8 +131,7 @@ namespace BitFab.KW1281Test.Cluster
             Mc.AddLine("Sending 0x43 block");
 
             _kwp1281.SendBlock([0x43]);
-            var receiveBlocks = _kwp1281.ReceiveBlocks();
-            var blocks = receiveBlocks.Where(b => !b.IsAckNak).ToList();
+            var blocks = _kwp1281.ReceiveBlocks().Where(b => !b.IsAckNak).ToList();
             foreach (var block in blocks)
             {
                 Mc.AddLine($"{Utils.DumpAscii(block.Body)}");
