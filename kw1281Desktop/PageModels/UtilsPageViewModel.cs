@@ -14,8 +14,8 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
     public ObservableCollection<ObservableAddressValuePair> AddressValuePairs { get; } = new();
     readonly ActuatorDialogPage _popup = new();
 
-    public UtilsPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler)
-        : base(diagnostic, errorHandler)
+    public UtilsPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
+        : base(diagnostic, errorHandler, loader)
     {
         AddressValuePairs.Add(new ObservableAddressValuePair { IsVisible = true });
     }

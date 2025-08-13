@@ -1,6 +1,7 @@
 ﻿using BitFab.KW1281Test;
 using CommunityToolkit.Maui;
 using kw1281Desktop.Services.implementation;
+using kw1281Desktop.Services.Implementation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.UI.Windowing;
@@ -49,6 +50,7 @@ namespace kw1281Desktop
 #endif
 
             builder.Services.AddSingleton<IErrorHandler, ModalErrorHandler>();
+            builder.Services.AddSingleton<ILoaderService, LoaderService>();
 
             builder.Services.AddSingleton<Diagnostic>();
 

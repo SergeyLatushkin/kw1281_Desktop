@@ -7,8 +7,8 @@ namespace kw1281Desktop.PageModels;
 
 public sealed class AutoscanPageViewModel : BaseScanViewPageModel
 {
-    public AutoscanPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler)
-        : base(diagnostic, errorHandler)
+    public AutoscanPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
+        : base(diagnostic, errorHandler, loader)
     {
     }
 

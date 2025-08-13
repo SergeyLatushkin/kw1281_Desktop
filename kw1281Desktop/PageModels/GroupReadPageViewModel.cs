@@ -2,7 +2,6 @@
 using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Actions.Records;
 using BitFab.KW1281Test.Enums;
-using CommunityToolkit.Maui.Extensions;
 using kw1281Desktop.Converters;
 using kw1281Desktop.Models;
 using kw1281Desktop.Models.Base;
@@ -16,9 +15,9 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
     private readonly Diagnostic _diagnostic;
     private Action<IBaseResult>? handler;
     private event EventHandler? ScrollToLastRequested;
-    private readonly Loader _loader = new() { CanBeDismissedByTappingOutsideOfPopup = false };
+    private readonly ILoaderService _loader;
 
-    public GroupReadPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler)
+    public GroupReadPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
     {
         for (int i = 1; i < 4; i++)
         {
@@ -29,6 +28,7 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
         }
 
         _diagnostic = diagnostic;
+        _loader = loader;
     }
 
     public ObservableCollection<GroupRowModel> Rows { get; } = new();
@@ -65,7 +65,7 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
             return;
         }
 
-        var popupTask = Shell.Current.ShowPopupAsync(_loader);
+        _loader.ShowAsync();
 
         try
         {
@@ -114,7 +114,7 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
         }
         finally
         {
-            _loader.HideLoader();
+            await _loader.HideAsync();
         }
     }
 

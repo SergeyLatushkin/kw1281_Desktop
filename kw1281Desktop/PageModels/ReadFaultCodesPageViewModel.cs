@@ -8,8 +8,8 @@ namespace kw1281Desktop.PageModels;
 
 public sealed class ReadFaultCodesPageViewModel : BaseScanViewPageModel
 {
-    public ReadFaultCodesPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler)
-        : base(diagnostic, errorHandler)
+    public ReadFaultCodesPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
+        : base(diagnostic, errorHandler, loader)
     {
     }
 

@@ -3,7 +3,6 @@ using BitFab.KW1281Test;
 using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Actions.Records;
 using BitFab.KW1281Test.Enums;
-using CommunityToolkit.Maui.Extensions;
 using kw1281Desktop.Converters;
 using kw1281Desktop.Models;
 using kw1281Desktop.Models.Base;
@@ -13,18 +12,19 @@ namespace kw1281Desktop.PageModels.BasePageViewModels;
 public abstract class BaseScanViewPageModel : BasePropertyChanged
 {
     private event EventHandler? ScrollToLastRequested;
-    private readonly Loader _loader = new() { CanBeDismissedByTappingOutsideOfPopup = false };
+    private readonly ILoaderService _loader;
 
     protected IErrorHandler ErrorHandler { get; }
     protected Diagnostic Diagnostic { get; }
 
-    protected BaseScanViewPageModel(Diagnostic diagnostic, IErrorHandler errorHandler)
+    protected BaseScanViewPageModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
     {
         var route = Shell.Current.CurrentState.Location.ToString();
         AppSettingsStorage.Save("page", route);
 
         ErrorHandler = errorHandler;
         Diagnostic = diagnostic;
+        _loader = loader;
     }
 
     public ObservableCollection<LogLineDeck> LogLines { get; } = new();
@@ -48,7 +48,7 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
     protected async Task ExecuteReadInBackgroundWithLogDescription(string controllerAddress,
         Commands command, bool forceLogsOn = false, params string[] args)
     {
-        var popupTask = Shell.Current.ShowPopupAsync(_loader);
+        _loader.ShowAsync();
 
         try
         {
@@ -70,7 +70,7 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
         }
         finally
         {
-            _loader.HideLoader();
+            await _loader.HideAsync();
         }
     }
 
