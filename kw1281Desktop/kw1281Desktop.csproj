@@ -80,6 +80,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Pages\Loader.xaml.cs">
+	    <DependentUpon>Loader.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Pages\ActuatorDialogPage.xaml.cs">
 	    <DependentUpon>ActuatorDialogPage.xaml</DependentUpon>
 	  </Compile>
@@ -104,6 +107,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Pages\Loader.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\ActuatorDialogPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

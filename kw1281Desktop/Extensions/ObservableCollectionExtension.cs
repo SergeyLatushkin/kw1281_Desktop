@@ -1,9 +1,9 @@
-﻿using kw1281Desktop.Models;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using kw1281Desktop.Models;
 
-namespace kw1281Desktop.Extantions
+namespace kw1281Desktop.Extensions
 {
-    internal static class ObservableCollectionExtention
+    internal static class ObservableCollectionExtension
     {
         public static string[] FlattenPairs(this ObservableCollection<ObservableAddressValuePair> pairs)
         {

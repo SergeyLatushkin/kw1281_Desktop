@@ -3,6 +3,7 @@ using BitFab.KW1281Test.Enums;
 using kw1281Desktop.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using kw1281Desktop.PageModels.BasePageViewModels;
 
 namespace kw1281Desktop.PageModels;
 

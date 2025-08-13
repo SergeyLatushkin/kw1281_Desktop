@@ -1,17 +1,18 @@
 ﻿using BitFab.KW1281Test;
 using BitFab.KW1281Test.Enums;
 using CommunityToolkit.Maui.Extensions;
-using kw1281Desktop.Extantions;
 using kw1281Desktop.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using kw1281Desktop.Extensions;
+using kw1281Desktop.PageModels.BasePageViewModels;
 
 namespace kw1281Desktop.PageModels;
 
 public sealed class UtilsPageViewModel : BaseScanViewPageModel
 {
     public ObservableCollection<ObservableAddressValuePair> AddressValuePairs { get; } = new();
-    ActuatorDialogPage popup = new();
+    readonly ActuatorDialogPage _popup = new();
 
     public UtilsPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler)
         : base(diagnostic, errorHandler)
@@ -76,10 +77,10 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
 
     public async Task RunActuatorLoopAsync()
     {
-        popup.NextClicked += Diagnostic.Control.RequestNext;
-        popup.CancelClicked += Diagnostic.Control.RequestStop;
+        _popup.NextClicked += Diagnostic.Control.RequestNext;
+        _popup.CancelClicked += Diagnostic.Control.RequestStop;
 
-        var popupTask = Shell.Current.ShowPopupAsync(popup);
+        var popupTask = Shell.Current.ShowPopupAsync(_popup);
 
         DataSender.Instance.DataReceived += OnPopupResultReceived;
 
@@ -89,12 +90,15 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
 
         await popupTask;
 
-        popup.NextClicked -= Diagnostic.Control.RequestNext;
-        popup.CancelClicked -= Diagnostic.Control.RequestStop;
+        _popup.NextClicked -= Diagnostic.Control.RequestNext;
+        _popup.CancelClicked -= Diagnostic.Control.RequestStop;
     }
 
     private void OnPopupResultReceived(IBaseResult baseResult)
     {
-        popup.Input = baseResult.Content;
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            _popup.Input = baseResult.Content;
+        });
     }
 }

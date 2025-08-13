@@ -3,6 +3,7 @@ using BitFab.KW1281Test.Enums;
 using kw1281Desktop.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using kw1281Desktop.PageModels.BasePageViewModels;
 using WindowsAPICodePack.Dialogs;
 
 namespace kw1281Desktop.PageModels;
@@ -68,11 +69,11 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
     }
 
 
-    private string _lenght;
-    public string Lenght
+    private string _length;
+    public string Length
     {
-        get => _lenght;
-        set => SetProperty(ref _lenght, value);
+        get => _length;
+        set => SetProperty(ref _length, value);
     }
 
     private bool _isStartFieldEnabled;
@@ -82,18 +83,18 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
         set => SetProperty(ref _isStartFieldEnabled, value);
     }
 
-    private bool _isLenghtFieldEnabled;
-    public bool IsLenghtFieldEnabled
+    private bool _isLengthFieldEnabled;
+    public bool IsLengthFieldEnabled
     {
-        get => _isLenghtFieldEnabled;
-        set => SetProperty(ref _isLenghtFieldEnabled, value);
+        get => _isLengthFieldEnabled;
+        set => SetProperty(ref _isLengthFieldEnabled, value);
     }
 
     public ICommand ReadCommand => new Command(async () =>
     {
         List<(string, bool)> parameters = [
              (Start, _selectedDump.Start.Item2),
-            (Lenght, _selectedDump.Lenght.Item2),
+            (Length, _selectedDump.Length.Item2),
             (FilePath, true)];
 
         string[] args = parameters.Where(arg => arg.Item2).Select(arg => arg.Item1).ToArray();
@@ -136,9 +137,9 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
 
         _previousSelectedDump = _selectedDump;
 
-        IsLenghtFieldEnabled = _selectedDump.Lenght.Item2;
+        IsLengthFieldEnabled = _selectedDump.Length.Item2;
         IsStartFieldEnabled = _selectedDump.Start.Item2;
         Start = value.Start.Item1!;
-        Lenght = value.Lenght.Item1!;
+        Length = value.Length.Item1!;
     }
 }

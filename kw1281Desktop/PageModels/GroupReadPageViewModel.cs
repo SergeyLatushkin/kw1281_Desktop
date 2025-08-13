@@ -2,6 +2,7 @@
 using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Actions.Records;
 using BitFab.KW1281Test.Enums;
+using CommunityToolkit.Maui.Extensions;
 using kw1281Desktop.Converters;
 using kw1281Desktop.Models;
 using kw1281Desktop.Models.Base;
@@ -15,6 +16,7 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
     private readonly Diagnostic _diagnostic;
     private Action<IBaseResult>? handler;
     private event EventHandler? ScrollToLastRequested;
+    private readonly Loader _loader = new() { CanBeDismissedByTappingOutsideOfPopup = false };
 
     public GroupReadPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler)
     {
@@ -63,47 +65,57 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
             return;
         }
 
-        await Task.Run(async() =>
+        var popupTask = Shell.Current.ShowPopupAsync(_loader);
+
+        try
         {
-            if (row.Input.Equals("0"))
+            await Task.Run(async () =>
             {
-                row.IsRunning = true;
-            }
-
-            handler = (group) =>
-            {
-                MainThread.BeginInvokeOnMainThread(() =>
+                if (row.Input.Equals("0"))
                 {
-                    row.Fields.Clear();
+                    row.IsRunning = true;
+                }
 
-                    foreach (var kv in ((Result<IEnumerable<KeyValuePair<byte, string>>>)group).Data)
+                handler = (group) =>
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        row.Fields.Add(new FieldItem { Key = kv.Key, Value = kv.Value });
-                    }
+                        row.Fields.Clear();
 
-                    DataSender.Instance.DataReceived -= handler;
-                });
-            };
+                        foreach (var kv in ((Result<IEnumerable<KeyValuePair<byte, string>>>)group).Data)
+                        {
+                            row.Fields.Add(new FieldItem { Key = kv.Key, Value = kv.Value });
+                        }
 
-            DataSender.Instance.DataReceived += handler;
+                        DataSender.Instance.DataReceived -= handler;
+                    });
+                };
 
-            if (AppSettings.Logging)
-            {
-                Messenger.Instance.MessageReceived += OnGrupMessageReceived;
-            }
+                DataSender.Instance.DataReceived += handler;
 
-            await _diagnostic.Run(
-                AppSettings.Port!,
-                AppSettings.Baud,
-                Address,
-                !IsBasicSetting ? Commands.GroupRead : Commands.BasicSetting,
-                row.Input);
+                if (AppSettings.Logging)
+                {
+                    Messenger.Instance.MessageReceived += OnGrupMessageReceived;
+                }
 
-            if (AppSettings.Logging)
-            {
-                Messenger.Instance.MessageReceived -= OnGrupMessageReceived;
-            }
-        });
+                await _diagnostic.Run(
+                    AppSettings.Port!,
+                    AppSettings.Baud,
+                    Address,
+                    !IsBasicSetting ? Commands.GroupRead : Commands.BasicSetting,
+                    row.Input);
+
+                if (AppSettings.Logging)
+                {
+                    Messenger.Instance.MessageReceived -= OnGrupMessageReceived;
+                }
+            });
+
+        }
+        finally
+        {
+            _loader.HideLoader();
+        }
     }
 
     private void OnGrupMessageReceived(TextLine message)

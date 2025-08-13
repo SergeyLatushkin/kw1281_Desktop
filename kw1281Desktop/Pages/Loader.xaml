@@ -1,0 +1,17 @@
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="kw1281Desktop.Pages.Loader"
+               BackgroundColor="Transparent">
+
+    <Grid HorizontalOptions="Fill" VerticalOptions="Fill">
+        <ActivityIndicator IsRunning="True"
+                           Color="White"
+                           BackgroundColor="Transparent"
+                           Visual="Default"
+                           WidthRequest="50"
+                           HeightRequest="50"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+    </Grid>
+</toolkit:Popup>

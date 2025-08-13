@@ -38,9 +38,9 @@
                IsEnabled="{Binding IsStartFieldEnabled}" />
         <Entry Grid.Row="0"
                Grid.Column="3"
-               Placeholder="Lenght"
-               Text="{Binding Lenght, Mode=TwoWay}"
-               IsEnabled="{Binding IsLenghtFieldEnabled}" />
+               Placeholder="Length"
+               Text="{Binding Length, Mode=TwoWay}"
+               IsEnabled="{Binding IsLengthFieldEnabled}" />
         <Button Grid.Row="0"
                 Grid.Column="4"
                 Text="Run"

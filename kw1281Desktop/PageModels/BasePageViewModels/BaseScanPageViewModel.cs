@@ -1,21 +1,22 @@
+using System.Collections.ObjectModel;
 using BitFab.KW1281Test;
 using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Actions.Records;
 using BitFab.KW1281Test.Enums;
+using CommunityToolkit.Maui.Extensions;
 using kw1281Desktop.Converters;
 using kw1281Desktop.Models;
 using kw1281Desktop.Models.Base;
-using System.Collections.ObjectModel;
 
-namespace kw1281Desktop.PageModels;
+namespace kw1281Desktop.PageModels.BasePageViewModels;
 
 public abstract class BaseScanViewPageModel : BasePropertyChanged
 {
-    protected Diagnostic Diagnostic { get; }
-
     private event EventHandler? ScrollToLastRequested;
+    private readonly Loader _loader = new() { CanBeDismissedByTappingOutsideOfPopup = false };
 
     protected IErrorHandler ErrorHandler { get; }
+    protected Diagnostic Diagnostic { get; }
 
     protected BaseScanViewPageModel(Diagnostic diagnostic, IErrorHandler errorHandler)
     {
@@ -47,21 +48,30 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
     protected async Task ExecuteReadInBackgroundWithLogDescription(string controllerAddress,
         Commands command, bool forceLogsOn = false, params string[] args)
     {
-        await Task.Run(async() =>
+        var popupTask = Shell.Current.ShowPopupAsync(_loader);
+
+        try
         {
-            if (!forceLogsOn && !AppSettings.Logging)
+            await Task.Run(async () =>
             {
+                if (!forceLogsOn && !AppSettings.Logging)
+                {
+                    await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
+
+                    return;
+                }
+
+                Messenger.Instance.MessageReceived += OnLogReceived;
+
                 await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
 
-                return;
-            }
-
-            Messenger.Instance.MessageReceived += OnLogReceived;
-
-            await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
-
-            Messenger.Instance.MessageReceived -= OnLogReceived;
-        });
+                Messenger.Instance.MessageReceived -= OnLogReceived;
+            });
+        }
+        finally
+        {
+            _loader.HideLoader();
+        }
     }
 
     protected void OnResultReceived(IBaseResult baseResult)

@@ -17,7 +17,7 @@ internal class EnumEqualsConverter : IValueConverter
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool b && b && parameter is string str)
+        if (value is true && parameter is string str)
         {
             return Enum.Parse(targetType, str);
         }

@@ -8,11 +8,11 @@ public class DumpItem : ElementItem<Commands>
         Commands number,
         string displayName,
         (string, bool) startField,
-        (string, bool) lenghtField)
+        (string, bool) lengthField)
         : this(number, displayName)
     {
         Start = startField;
-        Lenght = lenghtField;
+        Length = lengthField;
     }
 
     public DumpItem(Commands number, string displayName)
@@ -21,5 +21,5 @@ public class DumpItem : ElementItem<Commands>
     }
 
     public (string, bool) Start { get; }
-    public (string, bool) Lenght { get; }
+    public (string, bool) Length { get; }
 }
