@@ -82,7 +82,7 @@ public sealed class AdaptationPageViewModel : BaseScanViewPageModel
 
         DataSender.Instance.DataReceived += OnResultReceived;
 
-        await ExecuteReadInBackgroundWithLogDescription(
+        await ExecuteReadInBackgroundWithLoader(
             SelectedAddress.Value,
             command,
             args: command.Equals(Commands.AdaptationRead) ? [Channel, Login] : [Channel, Value, Login]);

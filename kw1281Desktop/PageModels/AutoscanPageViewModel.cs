@@ -16,7 +16,7 @@ public sealed class AutoscanPageViewModel : BaseScanViewPageModel
     {
         DataSender.Instance.DataReceived += OnResultReceived;
 
-        await ExecuteReadInBackgroundWithLogDescription(
+        await ExecuteReadInBackgroundWithLoader(
             null!,
             Commands.AutoScan,
             args: Addresses.Select(address => address.Value).ToArray());

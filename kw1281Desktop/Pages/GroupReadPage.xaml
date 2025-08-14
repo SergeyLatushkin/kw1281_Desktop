@@ -50,7 +50,7 @@
                                 <DataTemplate x:DataType="models:FieldItem"  >
                                     <VerticalStackLayout WidthRequest="200" Padding="0,0,5,0"  Spacing="2" VerticalOptions="End">
                                         <Label Text="{Binding Key}" HorizontalOptions="Center" />
-                                        <Entry Text="{Binding Value, Mode=OneWay}" IsEnabled="False" />
+                                        <Entry Text="{Binding Value, Mode=OneWay}" HorizontalTextAlignment="Center" IsEnabled="False" />
                                     </VerticalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

@@ -71,6 +71,7 @@ namespace BitFab.KW1281Test
 
                 if (response == null || response.ActuatorName == "End")
                 {
+                    Ds.Send($"Actuator Test: End");
                     break;
                 }
 

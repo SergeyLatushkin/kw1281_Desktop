@@ -19,7 +19,7 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
 
     public GroupReadPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
     {
-        for (int i = 1; i < 4; i++)
+        for (int i = 1; i < (AppSettings.Logging ? 4 : 6); i++)
         {
             var row = new GroupRowModel { Input = i.ToString() };
             row.StartCommand = new Command(() => ExecuteStart(row));

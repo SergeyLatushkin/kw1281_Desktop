@@ -12,7 +12,7 @@ namespace kw1281Desktop.PageModels;
 public sealed class UtilsPageViewModel : BaseScanViewPageModel
 {
     public ObservableCollection<ObservableAddressValuePair> AddressValuePairs { get; } = new();
-    readonly ActuatorDialogPage _popup = new();
+    readonly ActuatorDialogPage _popup = new() { CanBeDismissedByTappingOutsideOfPopup = false };
 
     public UtilsPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
         : base(diagnostic, errorHandler, loader)
@@ -70,7 +70,7 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
 
         DataSender.Instance.DataReceived += OnResultReceived;
 
-        await ExecuteReadInBackgroundWithLogDescription(SelectedAddress.Value, SelectedCommand, args:args);
+        await ExecuteReadInBackgroundWithLoader(SelectedAddress.Value, SelectedCommand, args:args);
 
         DataSender.Instance.DataReceived -= OnResultReceived;
     });
@@ -84,7 +84,7 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
 
         DataSender.Instance.DataReceived += OnPopupResultReceived;
 
-        await ExecuteReadInBackgroundWithLogDescription(SelectedAddress.Value, SelectedCommand);
+        await ExecuteReadInBackground(SelectedAddress.Value, SelectedCommand);
 
         DataSender.Instance.DataReceived -= OnPopupResultReceived;
 

@@ -99,12 +99,12 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
 
         string[] args = parameters.Where(arg => arg.Item2).Select(arg => arg.Item1).ToArray();
 
-        await ExecuteReadInBackgroundWithLogDescription(SelectedAddress.Value, SelectedDump.Value, true, args);
+        await ExecuteReadInBackgroundWithLoader(SelectedAddress.Value, SelectedDump.Value, true, args);
     });
 
     public ICommand ResetCommand => new Command(async () =>
     {
-        await ExecuteReadInBackgroundWithLogDescription(SelectedAddress.Value, Commands.Reset);
+        await ExecuteReadInBackgroundWithLoader(SelectedAddress.Value, Commands.Reset);
     });
 
     public ICommand ChooseCommand => new Command(() =>

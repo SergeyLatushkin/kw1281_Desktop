@@ -45,28 +45,33 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
         new ( "56", "56 - Radio" ),
     };
 
-    protected async Task ExecuteReadInBackgroundWithLogDescription(string controllerAddress,
-        Commands command, bool forceLogsOn = false, params string[] args)
+    protected async Task ExecuteReadInBackground(string controllerAddress, Commands command,
+        bool forceLogsOn = false, params string[] args)
+    {
+        await Task.Run(async () =>
+        {
+            if (!forceLogsOn && !AppSettings.Logging)
+            {
+                await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
+
+                return;
+            }
+
+            Messenger.Instance.MessageReceived += OnLogReceived;
+
+            await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
+
+            Messenger.Instance.MessageReceived -= OnLogReceived;
+        });
+    }
+
+    protected async Task ExecuteReadInBackgroundWithLoader(string controllerAddress, Commands command, bool forceLogsOn = false, params string[] args)
     {
         _loader.ShowAsync();
 
         try
         {
-            await Task.Run(async () =>
-            {
-                if (!forceLogsOn && !AppSettings.Logging)
-                {
-                    await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
-
-                    return;
-                }
-
-                Messenger.Instance.MessageReceived += OnLogReceived;
-
-                await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
-
-                Messenger.Instance.MessageReceived -= OnLogReceived;
-            });
+            await ExecuteReadInBackground(controllerAddress, command, forceLogsOn, args);
         }
         finally
         {
