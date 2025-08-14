@@ -16,13 +16,11 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <StackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
-            <Picker Title="Port" ItemsSource="{Binding Ports}" SelectedItem="{Binding SelectedPort}" />
-        </StackLayout>
+        <Picker Grid.Row="0" Grid.Column="0" Title="Port" ItemsSource="{Binding Ports}"
+                SelectedItem="{Binding SelectedPort}" />
 
-        <StackLayout Grid.Row="0" Grid.Column="1" Spacing="5">
-            <Picker Title="Baud" ItemsSource="{Binding Bauds}" SelectedItem="{Binding SelectedBaud}" />
-        </StackLayout>
+        <Picker Grid.Row="0" Grid.Column="1" Title="Baud" ItemsSource="{Binding Bauds}"
+                SelectedItem="{Binding SelectedBaud}" />
 
         <HorizontalStackLayout Grid.Row="1" >
             <CheckBox IsChecked="{Binding IsLoggingEnabled}" />

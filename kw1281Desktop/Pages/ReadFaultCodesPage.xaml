@@ -21,23 +21,20 @@
 
         <Picker Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Addresses}" SelectedItem="{Binding SelectedAddress}"
                 ItemDisplayBinding="{Binding Name}" />
-        <Button
-            Grid.Row="0"
-            Grid.Column="1"
-            Text="Read"
-            Command="{Binding ReadClearCommand}"
-            CommandParameter="ReadFaultCodes" />
-        <Button
-            Grid.Row="0"
-            Grid.Column="2"
-            Text="Clear"
-            Command="{Binding ReadClearCommand}"
-            CommandParameter="ClearFaultCodes" />
-        <Button
-            Grid.Row="0"
-            Grid.Column="3"
-            Text="Read Group"
-            Command="{Binding GoToGroupCommand}" />
+        <Button Grid.Row="0"
+                Grid.Column="1"
+                Text="Read"
+                Command="{Binding ReadClearCommand}"
+                CommandParameter="ReadFaultCodes" />
+        <Button Grid.Row="0"
+                Grid.Column="2"
+                Text="Clear"
+                Command="{Binding ReadClearCommand}"
+                CommandParameter="ClearFaultCodes" />
+        <Button Grid.Row="0"
+                Grid.Column="3"
+                Text="Read Group"
+                Command="{Binding GoToGroupCommand}" />
         <Border Grid.Row="1" Grid.ColumnSpan="4" Stroke="Gray" StrokeThickness="1" BackgroundColor="#f0f0f0"
                 Padding="10">
             <ScrollView x:Name="ScrollView">
@@ -46,9 +43,10 @@
         </Border>
 
         <Label Grid.Row="2"
+               FontSize="16"
                Grid.ColumnSpan="4"
                Text="Error code decoding"
-               TextColor="Blue"
+               TextColor="#0078D4"
                TextDecorations="Underline">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnLinkTapped" NumberOfTapsRequired="1" />

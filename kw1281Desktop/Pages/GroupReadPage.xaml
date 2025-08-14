@@ -13,14 +13,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-
         </Grid.RowDefinitions>
 
         <CollectionView Grid.Row="0" ItemsSource="{Binding Rows}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <HorizontalStackLayout Spacing="10" Padding="10" VerticalOptions="End">
-
+                    <HorizontalStackLayout Spacing="10" Padding="10,10,10,12" VerticalOptions="End">
                         <Entry x:DataType="models:GroupRowModel"
                             WidthRequest="80"
                             Keyboard="Numeric"
@@ -50,7 +48,7 @@
                                         VerticalOptions="End">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="models:FieldItem"  >
-                                    <VerticalStackLayout WidthRequest="200" Padding="5" Spacing="2" VerticalOptions="End">
+                                    <VerticalStackLayout WidthRequest="200" Padding="0,0,5,0"  Spacing="2" VerticalOptions="End">
                                         <Label Text="{Binding Key}" HorizontalOptions="Center" />
                                         <Entry Text="{Binding Value, Mode=OneWay}" IsEnabled="False" />
                                     </VerticalStackLayout>
