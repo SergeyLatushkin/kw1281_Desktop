@@ -21,8 +21,6 @@ public class GroupRowModel : BasePropertyChanged
         new FieldItem { Key = 0, Value = string.Empty }
     };
 
-    public ICommand? CancelCommand { get; set; }
-
     public ICommand? StartCommand { get; set; }
 }
 
@@ -30,4 +28,5 @@ public class FieldItem
 {
     public byte Key { get; set; }
     public string? Value { get; set; }
+    public int Whidth { get; set; } = 200;
 }

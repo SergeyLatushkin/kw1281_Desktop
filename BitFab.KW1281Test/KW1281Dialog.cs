@@ -73,7 +73,7 @@ namespace BitFab.KW1281Test
         /// <returns>True if successful.</returns>
         bool SetSoftwareCoding(int controllerAddress, int softwareCoding, int workshopCode);
 
-        bool GroupRead(byte groupNumber, bool useBasicSetting = false, CancellationToken token = default);
+        bool GroupRead(byte groupNumber, bool useBasicSetting = false);
 
         List<byte> ReadSecureImmoAccess(List<byte> blockBytes);
 
@@ -691,11 +691,11 @@ namespace BitFab.KW1281Test
             return true;
         }
 
-        public bool GroupRead(byte groupNumber, bool useBasicSetting = false, CancellationToken token = default)
+        public bool GroupRead(byte groupNumber, bool useBasicSetting = false)
         {
             if (groupNumber == 0)
             {
-                return RawDataRead(useBasicSetting, token); //TODO
+                return RawDataRead(useBasicSetting);
             }
 
             if (useBasicSetting)
@@ -761,7 +761,7 @@ namespace BitFab.KW1281Test
             return true;
         }
 
-        private bool RawDataRead(bool useBasicSetting, CancellationToken token = default)
+        private bool RawDataRead(bool useBasicSetting)
         {
             if (useBasicSetting)
             {
@@ -772,28 +772,23 @@ namespace BitFab.KW1281Test
                 Mc.AddLine($"Sending Raw Data Read block");
             }
 
-            while (!token.IsCancellationRequested)
+            List<byte> bytes = [ (byte)(useBasicSetting ? BlockTitle.BasicSettingRawDataRead : BlockTitle.RawDataRead) ];
+            SendBlock(bytes);
+
+            var responseBlock = ReceiveBlock();
+
+            if (responseBlock is not RawDataReadResponseBlock rawDataReadResponse)
             {
-                List<byte> bytes = [ (byte)(useBasicSetting ? BlockTitle.BasicSettingRawDataRead : BlockTitle.RawDataRead) ];
-                SendBlock(bytes);
+                Mc.AddLine($"Expected a Raw Data Read response block but received a ${responseBlock.Title:X2} block.");
 
-                var responseBlock = ReceiveBlock();
-
-                if (responseBlock is not RawDataReadResponseBlock rawDataReadResponse)
-                {
-                    Mc.AddLine($"Expected a Raw Data Read response block but received a ${responseBlock.Title:X2} block.");
-
-                    return false;
-                }
-
-                List<KeyValuePair<byte, string>> result = [
-                    new KeyValuePair<byte, string>(0, rawDataReadResponse.ToString())
-                ];
-
-                Ds.Send(result);
+                return false;
             }
 
-            Mc.AddLine();
+            List<KeyValuePair<byte, string>> result = rawDataReadResponse.Body
+                .Select(b => new KeyValuePair<byte, string>(0, $"{b:D3}"))
+                .ToList();
+
+            Ds.Send(result);
 
             return true;
         }

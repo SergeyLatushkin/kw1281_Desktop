@@ -16,7 +16,6 @@ public class Diagnostic
     Messenger Mc = Messenger.Instance;
     DataSender Ds = DataSender.Instance;
 
-    public CancellationTokenSource Cts { get; } = new();
     public static ActuatorTestControl Control { get; } = new();
     internal static List<string> CommandAndArgs { get; private set; } = [];
 
@@ -194,7 +193,7 @@ public class Diagnostic
                     tester.AdaptationTest(channel, channelValue, login, ecuInfo.WorkshopCode);
                     break;
                 case Commands.BasicSetting:
-                    tester.BasicSettingRead(groupNumber, Cts.Token);
+                    tester.BasicSettingRead(groupNumber);
                     break;
                 case Commands.ClarionVWPremium4SafeCode:
                     tester.ClarionVWPremium4SafeCode();
@@ -236,7 +235,7 @@ public class Diagnostic
                 //    tester.GetClusterId();
                 //    break;
                 case Commands.GroupRead:
-                    tester.GroupRead(groupNumber, Cts.Token);
+                    tester.GroupRead(groupNumber);
                     break;
                 case Commands.LoadEeprom:
                     tester.LoadEeprom(address, fileDirectory!);

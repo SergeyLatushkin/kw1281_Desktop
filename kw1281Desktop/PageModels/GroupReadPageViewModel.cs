@@ -11,19 +11,17 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
 {
     private readonly Diagnostic _diagnostic;
     private readonly ILoaderService _loader;
-    private Action<IBaseResult>? handler;
 
     public GroupReadPageViewModel(Diagnostic diagnostic, ILoaderService loader)
         : base(diagnostic, loader)
     {
-        for (int i = 1; i < 6; i++)
+        for (int i = 0; i < 5; i++)
         {
             var row = new GroupRowModel
             {
                 Input = i.ToString()
             };
-            row.StartCommand = new Command(() => ExecuteStart(row));
-            row.CancelCommand = new Command(() => ExecuteCancel(row));
+            row.StartCommand = new Command(async() => await ExecuteStart(row));
             Rows.Add(row);
         }
 
@@ -47,12 +45,7 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
         set => SetProperty(ref _isBasicSetting, value);
     }
 
-    private void ExecuteCancel(GroupRowModel row)
-    {
-        _diagnostic.Cts.Cancel();
-    }
-
-    private async void ExecuteStart(GroupRowModel row)
+    private async Task ExecuteStart(GroupRowModel row)
     {
         if (string.IsNullOrWhiteSpace(row.Input))
         {
@@ -63,48 +56,60 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
 
         try
         {
-            await Task.Run(async () =>
+            var tcs = new TaskCompletionSource<IBaseResult>();
+
+            Action<IBaseResult> handler = null!;
+
+            handler = (result) =>
             {
-                handler = (result) =>
+                DataSender.Instance.DataReceived -= handler;
+                tcs.TrySetResult(result);
+            };
+
+            DataSender.Instance.DataReceived += handler;
+
+            await _diagnostic.Run(
+                AppSettings.Port!,
+                AppSettings.Baud,
+                Address,
+                !IsBasicSetting ? Commands.GroupRead : Commands.BasicSetting,
+                row.Input);
+
+            IBaseResult result = await tcs.Task;
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                row.Fields.Clear();
+
+                if (result.Ok && result is Result<List<KeyValuePair<byte, string>>> group)
                 {
-                    MainThread.BeginInvokeOnMainThread(() =>
+                    int groupsCount = group.Data.Count;
+                    for (int i = 0; i < (groupsCount < 4 ? 4 : groupsCount); i++)
                     {
-                        if (result.Ok && result is Result<List<KeyValuePair<byte, string>>> group)
+                        if (i < groupsCount)
                         {
-                            row.Fields.Clear();
-
-                            int groupsCount = group.Data.Count();
-
-                            for (int i = 0; i < (groupsCount < 4 ? 4 : groupsCount); i++)
+                            row.Fields.Add(new FieldItem
                             {
-                                if (i < groupsCount)
-                                {
-                                    row.Fields.Add(new FieldItem { Key = group.Data[i].Key, Value = group.Data[i].Value });
-                                }
-                                else
-                                {
-                                    row.Fields.Add(new FieldItem { Key = 0, Value = "Not available" });
-                                }
-                            }
+                                Key = group.Data[i].Key,
+                                Value = group.Data[i].Value,
+                                Whidth = 800 / groupsCount
+                            });
                         }
-                    });
-                };
-
-                DataSender.Instance.DataReceived += handler;
-
-                await _diagnostic.Run(
-                    AppSettings.Port!,
-                    AppSettings.Baud,
-                    Address,
-                    !IsBasicSetting ? Commands.GroupRead : Commands.BasicSetting,
-                    row.Input);
+                        else
+                        {
+                            row.Fields.Add(new FieldItem { Key = 0, Value = "Not available" });
+                        }
+                    }
+                }
+                else if (!result.Ok && result is Result<Exception> ex)
+                {
+                    row.Fields.Add(new FieldItem { Key = 0, Value = $"Error : {ex.Error.Message}", Whidth = 800 });
+                }
             });
-
         }
         finally
         {
             await _loader.HideAsync();
-            DataSender.Instance.DataReceived -= handler;
         }
     }
 }

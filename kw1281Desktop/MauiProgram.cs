@@ -56,7 +56,7 @@ namespace kw1281Desktop
             builder.Services.AddSingleton<AppSettingsPageViewModel>();
             builder.Services.AddSingleton<AutoscanPageViewModel>();
             builder.Services.AddSingleton<DumpPageViewModel>();
-            builder.Services.AddTransient<GroupReadPageViewModel>();
+            builder.Services.AddSingleton<GroupReadPageViewModel>();
             builder.Services.AddSingleton<ReadFaultCodesPageViewModel>();
             builder.Services.AddSingleton<UtilsPageViewModel>();
 

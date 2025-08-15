@@ -136,9 +136,9 @@ namespace BitFab.KW1281Test
             }
         }
 
-        public void BasicSettingRead(byte groupNumber, CancellationToken token)
+        public void BasicSettingRead(byte groupNumber)
         {
-            _kwp1281.GroupRead(groupNumber, true, token);
+            _kwp1281.GroupRead(groupNumber, true);
         }
 
         public void ClarionVWPremium4SafeCode()
@@ -746,9 +746,9 @@ namespace BitFab.KW1281Test
             }
         }
 
-        public void GroupRead(byte groupNumber, CancellationToken token)
+        public void GroupRead(byte groupNumber)
         {
-            var succeeded = _kwp1281.GroupRead(groupNumber, token:token);
+            var succeeded = _kwp1281.GroupRead(groupNumber);
         }
 
         public void LoadEeprom(uint address, string filename)
