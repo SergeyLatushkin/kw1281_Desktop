@@ -18,6 +18,7 @@
         DumpMarelliMem,
         DumpMem,
         DumpRam,
+        DumpRom,
         DumpCcmRom,
         DumpClusterNecRom,
         FindLogins,

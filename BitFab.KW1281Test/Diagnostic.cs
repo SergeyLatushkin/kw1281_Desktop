@@ -228,6 +228,9 @@ public class Diagnostic
                 case Commands.DumpRam:
                     tester.DumpRam(address, length, fileDirectory);
                     break;
+                case Commands.DumpRom:
+                    tester.DumpRom(address, length, fileDirectory);
+                    break;
                 case Commands.FindLogins:
                     tester.FindLogins(login!.Value, ecuInfo.WorkshopCode);
                     break;

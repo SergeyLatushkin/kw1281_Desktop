@@ -30,6 +30,7 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
             new(Commands.DumpMarelliMem, "Dump MarelliMem", new ("3072", true), new ("1024", true)),
             new(Commands.DumpMem, "Dump Mem", new ("8192", true), new ("65536", true)),
             new(Commands.DumpRam, "Dump Ram", new ("8192", true), new ("65536", true)),
+            new(Commands.DumpRom, "Dump Rom", new ("8192", true), new ("65536", true)),
             new(Commands.DumpRBxMem, "Dump RBxMem", new ("66560", true), new ("1024", true)),
             new(Commands.DumpRBxMemOdd, "Dump RBxMemOdd"),
             new(Commands.DumpCcmRom, "Dump CcmRom"),

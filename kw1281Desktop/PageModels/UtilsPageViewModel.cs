@@ -98,7 +98,18 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            _popup.Input = baseResult.Content;
+            if (baseResult.Ok)
+            {
+                _popup.Input = baseResult.Content;
+            }
+            else if (!baseResult.Ok && baseResult is Result<Exception> ex)
+            {
+                _popup.Input = $"Error : {ex.Error.Message}";
+            }
+            else
+            {
+                _popup.Input = "Data result error.";
+            }
         });
     }
 }
