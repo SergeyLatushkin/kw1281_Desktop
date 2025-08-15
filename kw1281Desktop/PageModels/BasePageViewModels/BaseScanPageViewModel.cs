@@ -14,15 +14,13 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
     private event EventHandler? ScrollToLastRequested;
     private readonly ILoaderService _loader;
 
-    protected IErrorHandler ErrorHandler { get; }
     protected Diagnostic Diagnostic { get; }
 
-    protected BaseScanViewPageModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
+    protected BaseScanViewPageModel(Diagnostic diagnostic, ILoaderService loader)
     {
         var route = Shell.Current.CurrentState.Location.ToString();
         AppSettingsStorage.Save("page", route);
 
-        ErrorHandler = errorHandler;
         Diagnostic = diagnostic;
         _loader = loader;
     }
@@ -35,8 +33,8 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
         new ( "1", "01 - Engine" ),
         new ( "3", "03 - ABS Brakes" ),
         new ( "8", "08 - Auto HVAC" ),
-        new ( "17", "17 - Instruments" ),
         new ( "15", "15 - Airbags" ),
+        new ( "17", "17 - Instruments" ),
         new ( "19", "19 - CAN Gateway" ),
         new ( "25", "25 - Immobilizer" ),
         new ( "37", "37 - Navigation" ),
@@ -65,7 +63,8 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
         });
     }
 
-    protected async Task ExecuteReadInBackgroundWithLoader(string controllerAddress, Commands command, bool forceLogsOn = false, params string[] args)
+    protected async Task ExecuteReadInBackgroundWithLoader(string controllerAddress, Commands command,
+        bool forceLogsOn = false, params string[] args)
     {
         _loader.ShowAsync();
 

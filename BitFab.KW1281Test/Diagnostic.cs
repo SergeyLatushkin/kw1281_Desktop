@@ -5,7 +5,6 @@ using BitFab.KW1281Test.Interface.EDC15;
 using BitFab.KW1281Test.Models;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -134,7 +133,7 @@ public class Diagnostic
         }
         catch
         {
-            Mc.AddLine($"Check parameters.", Color.Red);
+            Ds.Error("Check parameters.");
             return;
         }
 
@@ -281,8 +280,7 @@ public class Diagnostic
         }
         catch (Exception ex)
         {
-            Mc.AddLine($"{ex.Message}", Color.Red);
-            //Mc.AddLine($"{ex.StackTrace}", Color.Gray);
+            Ds.Error(ex);
         }
     }
 
@@ -389,18 +387,18 @@ public class Diagnostic
     {
         if (Regex.IsMatch(portName.ToUpper(), @"\A[A-Z0-9]{8}\Z"))
         {
-            Mc.AddLine($"Opening FTDI serial port {portName}");
+            Mc.Add($"Opening FTDI serial port {portName}");
             return new FtdiInterface(portName, baudRate);
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
             portName.StartsWith("/dev/", StringComparison.CurrentCultureIgnoreCase))
         {
-            Mc.AddLine($"Opening Linux serial port {portName}");
+            Mc.Add($"Opening Linux serial port {portName}");
             return new LinuxInterface(portName, baudRate);
         }
         else
         {
-            Mc.AddLine($"Opening Generic serial port {portName}");
+            Mc.Add($"Opening Generic serial port {portName}");
             return new GenericInterface(portName, baudRate);
         }
     }

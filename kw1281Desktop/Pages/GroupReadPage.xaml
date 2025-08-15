@@ -10,7 +10,6 @@
 
     <Grid RowSpacing="10" Padding="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -36,12 +35,6 @@
                                 Command="{Binding StartCommand}"
                                 VerticalOptions="End"
                                 IsVisible="{Binding IsNotRunning}" />
-                        <Button x:DataType="models:GroupRowModel"
-                                Text="Cancel"
-                                WidthRequest="100"
-                                Command="{Binding CancelCommand}"
-                                VerticalOptions="End"
-                                IsVisible="{Binding IsRunning}" />
                         <CollectionView x:DataType="models:GroupRowModel"
                                         ItemsSource="{Binding Fields}"
                                         ItemsLayout="HorizontalList"
@@ -59,13 +52,7 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Border Grid.Row="1" Stroke="Gray" StrokeThickness="1" BackgroundColor="#f0f0f0" Padding="10"
-                IsVisible="{Binding ShowLogs, Mode=OneWay}">
-            <ScrollView x:Name="ScrollView">
-                <VerticalStackLayout x:Name="LogContainer" Spacing="2" />
-            </ScrollView>
-        </Border>
-        <HorizontalStackLayout Grid.Row="2" >
+        <HorizontalStackLayout Grid.Row="1" >
             <CheckBox IsChecked="{Binding IsBasicSetting}" />
             <Label Text="Basic setting" VerticalOptions="Center" />
         </HorizontalStackLayout>

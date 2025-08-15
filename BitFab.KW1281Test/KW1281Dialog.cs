@@ -1,6 +1,5 @@
 ﻿using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Blocks;
-using System.Linq;
 using System.Text;
 
 namespace BitFab.KW1281Test
@@ -85,8 +84,8 @@ namespace BitFab.KW1281Test
 
     internal class KW1281Dialog : IKW1281Dialog
     {
-        Messenger Mc = Messenger.Instance;
-        DataSender Ds = DataSender.Instance;
+        readonly Messenger Mc = Messenger.Instance;
+        readonly DataSender Ds = DataSender.Instance;
 
         public ControllerInfo Connect()
         {
@@ -119,7 +118,7 @@ namespace BitFab.KW1281Test
             {
                 Mc.AddLine("Sending ReadIdent block");
 
-                SendBlock(new List<byte> { (byte)BlockTitle.ReadIdent });
+                SendBlock([(byte)BlockTitle.ReadIdent]);
 
                 var blocks = ReceiveBlocks();
                 var ident = new ControllerIdent(blocks.Where(b => !b.IsAckNak));
@@ -142,13 +141,13 @@ namespace BitFab.KW1281Test
         public List<byte>? ReadEeprom(ushort address, byte count)
         {
             Mc.Add($"Sending ReadEeprom block (Address: ${address:X4}, Count: ${count:X2})");
-            SendBlock(new List<byte>
-            {
+            SendBlock(
+            [
                 (byte)BlockTitle.ReadEeprom,
                 count,
                 (byte)(address >> 8),
                 (byte)(address & 0xFF)
-            });
+            ]);
             var blocks = ReceiveBlocks();
 
             if (blocks.Count == 1 && blocks[0] is NakBlock)
@@ -174,13 +173,13 @@ namespace BitFab.KW1281Test
         public List<byte>? ReadRam(ushort address, byte count)
         {
             Mc.AddLine($"Sending ReadRam block (Address: ${address:X4}, Count: ${count:X2})");
-            SendBlock(new List<byte>
-            {
+            SendBlock(
+            [
                 (byte)BlockTitle.ReadRam,
                 count,
                 (byte)(address >> 8),
                 (byte)(address & 0xFF)
-            });
+            ]);
             var blocks = ReceiveBlocks();
 
             if (blocks.Count == 1 && blocks[0] is NakBlock)
@@ -292,18 +291,18 @@ namespace BitFab.KW1281Test
         public List<byte> ReadRomEeprom(ushort address, byte count)
         {
             Mc.AddLine($"Sending ReadRomEeprom block (Address: ${address:X4}, Count: ${count:X2})");
-            SendBlock(new List<byte>
-            {
+            SendBlock(
+            [
                 (byte)BlockTitle.ReadRomEeprom,
                 count,
                 (byte)(address >> 8),
                 (byte)(address & 0xFF)
-            });
+            ]);
             var blocks = ReceiveBlocks();
 
             if (blocks.Count == 1 && blocks[0] is NakBlock)
             {
-                return new List<byte>();
+                return [];
             }
 
             blocks = blocks.Where(b => !b.IsAckNak).ToList();
@@ -319,7 +318,7 @@ namespace BitFab.KW1281Test
             if (_isConnected)
             {
                 Mc.AddLine("Sending End Communication block");
-                SendBlock(new List<byte> { (byte)BlockTitle.End });
+                SendBlock([(byte)BlockTitle.End]);
                 _isConnected = false;
             }
         }
@@ -499,7 +498,7 @@ namespace BitFab.KW1281Test
             var b = KwpCommon.ReadByte();
             if (b == 0x55)
             {
-                var keywordLsb = KwpCommon.ReadByte();
+                KwpCommon.ReadByte();
                 var keywordMsb = KwpCommon.ReadByte();
                 var complement = (byte)~keywordMsb;
                 BusyWait.Delay(25);
@@ -530,11 +529,7 @@ namespace BitFab.KW1281Test
         public ActuatorTestResponseBlock? ActuatorTest(byte value)
         {
             Mc.AddLine($"Sending actuator test 0x{value:X2} block");
-            SendBlock(new List<byte>
-            {
-                (byte)BlockTitle.ActuatorTest,
-                value
-            });
+            SendBlock([ (byte)BlockTitle.ActuatorTest, value ]);
 
             var blocks = ReceiveBlocks();
             blocks = blocks.Where(b => !b.IsAckNak).ToList();
@@ -557,10 +552,7 @@ namespace BitFab.KW1281Test
         public List<FaultCode>? ReadFaultCodes()
         {
             Mc.AddLine($"Sending ReadFaultCodes block");
-            SendBlock(new List<byte>
-            {
-                (byte)BlockTitle.FaultCodesRead
-            });
+            SendBlock([ (byte)BlockTitle.FaultCodesRead ]);
 
             var blocks = ReceiveBlocks();
             blocks = blocks.Where(b => !b.IsAckNak).ToList();
@@ -708,11 +700,11 @@ namespace BitFab.KW1281Test
 
             if (useBasicSetting)
             {
-                Mc.AddLine($"Sending Basic Setting Read blocks...");
+                Mc.Add($"Sending Basic Setting Read blocks...");
             }
             else
             {
-                Mc.AddLine($"Sending Group Read blocks...");
+                Mc.Add($"Sending Group Read blocks...");
             }
 
             GroupReadResponseWithTextBlock? textBlock = null;
@@ -722,12 +714,12 @@ namespace BitFab.KW1281Test
                 groupNumber ];
             SendBlock(bytes);
 
-            IEnumerable<KeyValuePair<byte, string>> result;
+            List<KeyValuePair<byte, string>> result;
 
             Block responseBlock = ReceiveBlock();
             if (responseBlock is NakBlock)
             {
-                result = [ new KeyValuePair<byte, string>(0,$"Not Available") ];
+                result = [ new KeyValuePair<byte, string>(0, "Not available") ];
                 Ds.Send(result);
             }
             else if (responseBlock is GroupReadResponseWithTextBlock groupReadResponseWithText)
@@ -738,7 +730,8 @@ namespace BitFab.KW1281Test
             else if (responseBlock is GroupReadResponseBlock groupReading)
             {
                 result = groupReading.SensorValues
-                    .Select(group => new KeyValuePair<byte, string>(group.SensorID, group.ToString()));
+                    .Select(group => new KeyValuePair<byte, string>(group.SensorID, group.ToString()))
+                    .ToList();
 
                 Ds.Send(result);
             }
@@ -760,12 +753,10 @@ namespace BitFab.KW1281Test
             }
             else
             {
-                Mc.AddLine($"Expected a Group Reading response block but received a ${responseBlock.Title:X2} block.");
+                Mc.Add($"Expected a Group Reading response block but received a ${responseBlock.Title:X2} block.");
 
                 return false;
             }
-
-            Mc.AddLine();
 
             return true;
         }
@@ -883,10 +874,7 @@ namespace BitFab.KW1281Test
         private void Pause()
         {
             _cancel = true;
-            if (_keepAliveTask != null)
-            {
-                _keepAliveTask.Wait();
-            }
+            _keepAliveTask?.Wait();
         }
 
         private void Resume()
@@ -900,7 +888,6 @@ namespace BitFab.KW1281Test
             while (!_cancel)
             {
                 _kw1281Dialog.KeepAlive();
-                //TODO: Mc.Add(".");
             }
         }
     }

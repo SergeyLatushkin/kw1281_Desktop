@@ -9,8 +9,8 @@ namespace kw1281Desktop.PageModels;
 
 public sealed class AdaptationPageViewModel : BaseScanViewPageModel
 {
-    public AdaptationPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
-        : base(diagnostic, errorHandler, loader)
+    public AdaptationPageViewModel(Diagnostic diagnostic, ILoaderService loader)
+        : base(diagnostic, loader)
     {
     }
 

@@ -1,27 +1,27 @@
 ﻿using BitFab.KW1281Test;
-using BitFab.KW1281Test.Actions;
-using BitFab.KW1281Test.Actions.Records;
 using BitFab.KW1281Test.Enums;
-using kw1281Desktop.Converters;
 using kw1281Desktop.Models;
-using kw1281Desktop.Models.Base;
+using kw1281Desktop.PageModels.BasePageViewModels;
 using System.Collections.ObjectModel;
 
 namespace kw1281Desktop.PageModels;
 
 [QueryProperty(nameof(Address), "address")]
-public sealed class GroupReadPageViewModel : BasePropertyChanged
+public sealed class GroupReadPageViewModel : BaseScanViewPageModel
 {
     private readonly Diagnostic _diagnostic;
-    private Action<IBaseResult>? handler;
-    private event EventHandler? ScrollToLastRequested;
     private readonly ILoaderService _loader;
+    private Action<IBaseResult>? handler;
 
-    public GroupReadPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
+    public GroupReadPageViewModel(Diagnostic diagnostic, ILoaderService loader)
+        : base(diagnostic, loader)
     {
-        for (int i = 1; i < (AppSettings.Logging ? 4 : 6); i++)
+        for (int i = 1; i < 6; i++)
         {
-            var row = new GroupRowModel { Input = i.ToString() };
+            var row = new GroupRowModel
+            {
+                Input = i.ToString()
+            };
             row.StartCommand = new Command(() => ExecuteStart(row));
             row.CancelCommand = new Command(() => ExecuteCancel(row));
             Rows.Add(row);
@@ -31,7 +31,7 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
         _loader = loader;
     }
 
-    public ObservableCollection<GroupRowModel> Rows { get; } = new();
+    public ObservableCollection<GroupRowModel> Rows { get; } = [];
 
     private string _address;
     public string Address
@@ -40,8 +40,6 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
         set => SetProperty(ref _address, value);
     }
 
-    public ObservableCollection<LogLineDeck> LogLines { get; } = new();
-
     private bool _isBasicSetting;
     public bool IsBasicSetting
     {
@@ -49,13 +47,9 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
         set => SetProperty(ref _isBasicSetting, value);
     }
 
-    public bool ShowLogs => AppSettings.Logging;
-
     private void ExecuteCancel(GroupRowModel row)
     {
         _diagnostic.Cts.Cancel();
-
-        row.IsRunning = false;
     }
 
     private async void ExecuteStart(GroupRowModel row)
@@ -71,32 +65,32 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
         {
             await Task.Run(async () =>
             {
-                if (row.Input.Equals("0"))
-                {
-                    row.IsRunning = true;
-                }
-
-                handler = (group) =>
+                handler = (result) =>
                 {
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        row.Fields.Clear();
-
-                        foreach (var kv in ((Result<IEnumerable<KeyValuePair<byte, string>>>)group).Data)
+                        if (result.Ok && result is Result<List<KeyValuePair<byte, string>>> group)
                         {
-                            row.Fields.Add(new FieldItem { Key = kv.Key, Value = kv.Value });
-                        }
+                            row.Fields.Clear();
 
-                        DataSender.Instance.DataReceived -= handler;
+                            int groupsCount = group.Data.Count();
+
+                            for (int i = 0; i < (groupsCount < 4 ? 4 : groupsCount); i++)
+                            {
+                                if (i < groupsCount)
+                                {
+                                    row.Fields.Add(new FieldItem { Key = group.Data[i].Key, Value = group.Data[i].Value });
+                                }
+                                else
+                                {
+                                    row.Fields.Add(new FieldItem { Key = 0, Value = "Not available" });
+                                }
+                            }
+                        }
                     });
                 };
 
                 DataSender.Instance.DataReceived += handler;
-
-                if (AppSettings.Logging)
-                {
-                    Messenger.Instance.MessageReceived += OnGrupMessageReceived;
-                }
 
                 await _diagnostic.Run(
                     AppSettings.Port!,
@@ -104,30 +98,13 @@ public sealed class GroupReadPageViewModel : BasePropertyChanged
                     Address,
                     !IsBasicSetting ? Commands.GroupRead : Commands.BasicSetting,
                     row.Input);
-
-                if (AppSettings.Logging)
-                {
-                    Messenger.Instance.MessageReceived -= OnGrupMessageReceived;
-                }
             });
 
         }
         finally
         {
             await _loader.HideAsync();
+            DataSender.Instance.DataReceived -= handler;
         }
-    }
-
-    private void OnGrupMessageReceived(TextLine message)
-    {
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            LogLines.Add(new()
-            {
-                Text = message.Text,
-                TextColor = message.TextColor.ToMauiColor()
-            });
-            ScrollToLastRequested?.Invoke(this, EventArgs.Empty);
-        });
     }
 }

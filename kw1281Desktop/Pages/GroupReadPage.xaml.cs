@@ -8,7 +8,5 @@ public partial class GroupReadPage : ContentPage
     {
         InitializeComponent();
         BindingContext = model;
-
-        PageHelper.HookLogBinding(model.LogLines, LogContainer, ScrollView);
     }
 }

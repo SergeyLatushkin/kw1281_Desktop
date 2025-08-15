@@ -10,8 +10,8 @@ namespace kw1281Desktop.PageModels;
 
 public sealed class DumpPageViewModel : BaseScanViewPageModel
 {
-    public DumpPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
-        : base(diagnostic, errorHandler, loader)
+    public DumpPageViewModel(Diagnostic diagnostic, ILoaderService loader)
+        : base(diagnostic, loader)
     {
     }
 

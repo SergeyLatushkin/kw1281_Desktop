@@ -13,24 +13,6 @@ public class GroupRowModel : BasePropertyChanged
         set => SetProperty(ref _input, value);
     }
 
-    private bool _isRunning;
-    public bool IsRunning
-    {
-        get => _isRunning;
-        set
-        {
-            if (_isRunning == value)
-            {
-                return;
-            }
-            _isRunning = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(IsNotRunning));
-        }
-    }
-
-    public bool IsNotRunning => !IsRunning;
-
     public ObservableCollection<FieldItem> Fields { get; } = new()
     {
         new FieldItem { Key = 0, Value = string.Empty },

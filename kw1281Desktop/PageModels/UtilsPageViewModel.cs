@@ -12,10 +12,10 @@ namespace kw1281Desktop.PageModels;
 public sealed class UtilsPageViewModel : BaseScanViewPageModel
 {
     public ObservableCollection<ObservableAddressValuePair> AddressValuePairs { get; } = new();
-    readonly ActuatorDialogPage _popup = new() { CanBeDismissedByTappingOutsideOfPopup = false };
+    readonly ActuatorDialogPage _popup = new() { CanBeDismissedByTappingOutsideOfPopup = false }; //TODO
 
-    public UtilsPageViewModel(Diagnostic diagnostic, IErrorHandler errorHandler, ILoaderService loader)
-        : base(diagnostic, errorHandler, loader)
+    public UtilsPageViewModel(Diagnostic diagnostic, ILoaderService loader)
+        : base(diagnostic, loader)
     {
         AddressValuePairs.Add(new ObservableAddressValuePair { IsVisible = true });
     }

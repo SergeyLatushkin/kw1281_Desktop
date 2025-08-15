@@ -19,7 +19,7 @@ public partial class ActuatorDialogPage : CommunityToolkit.Maui.Views.Popup
         CancelClicked?.Invoke();
     }
 
-    private string _input = "Click \"Next\" button";
+    private string _input = "Test is started...";
     public string Input
     {
         get => _input;
