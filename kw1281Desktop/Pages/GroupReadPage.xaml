@@ -8,7 +8,7 @@
              x:Class="kw1281Desktop.Pages.GroupReadPage"
              Title="Read groups">
 
-    <Grid RowSpacing="10" Padding="20">
+    <Grid RowSpacing="10" Padding="20" WidthRequest="1050" HorizontalOptions="Center" VerticalOptions="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>

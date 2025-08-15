@@ -56,7 +56,7 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
 
         try
         {
-            var tcs = new TaskCompletionSource<IBaseResult>();
+            TaskCompletionSource<IBaseResult> tcs = new();
 
             Action<IBaseResult> handler = null!;
 
@@ -90,7 +90,7 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
                         {
                             row.Fields.Add(new FieldItem
                             {
-                                Key = group.Data[i].Key,
+                                Key = groupsCount <= 4 ? group.Data[i].Key : null,
                                 Value = group.Data[i].Value,
                                 Whidth = 800 / groupsCount
                             });
@@ -103,7 +103,7 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
                 }
                 else if (!result.Ok && result is Result<Exception> ex)
                 {
-                    row.Fields.Add(new FieldItem { Key = 0, Value = $"Error : {ex.Error.Message}", Whidth = 800 });
+                    row.Fields.Add(new FieldItem { Value = $"Error : {ex.Error.Message}", Whidth = 800 });
                 }
             });
         }

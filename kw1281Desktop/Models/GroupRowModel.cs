@@ -26,7 +26,7 @@ public class GroupRowModel : BasePropertyChanged
 
 public class FieldItem
 {
-    public byte Key { get; set; }
+    public byte? Key { get; set; }
     public string? Value { get; set; }
     public int Whidth { get; set; } = 200;
 }
