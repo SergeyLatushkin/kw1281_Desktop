@@ -55,11 +55,16 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
                 return;
             }
 
-            Messenger.Instance.MessageReceived += OnLogReceived;
+            try
+            {
+                Messenger.Instance.MessageReceived += OnLogReceived;
 
-            await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
-
-            Messenger.Instance.MessageReceived -= OnLogReceived;
+                await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
+            }
+            finally
+            {
+                Messenger.Instance.MessageReceived -= OnLogReceived;
+            }
         });
     }
 
