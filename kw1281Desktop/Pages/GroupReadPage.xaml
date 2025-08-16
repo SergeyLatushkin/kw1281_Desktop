@@ -33,8 +33,7 @@
                                 Text="Start"
                                 WidthRequest="100"
                                 Command="{Binding StartCommand}"
-                                VerticalOptions="End"
-                                IsVisible="{Binding IsNotRunning}" />
+                                VerticalOptions="End" />
                         <CollectionView x:DataType="models:GroupRowModel"
                                         ItemsSource="{Binding Fields}"
                                         ItemsLayout="HorizontalList"
