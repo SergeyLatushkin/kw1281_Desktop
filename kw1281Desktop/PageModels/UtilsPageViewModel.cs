@@ -77,6 +77,7 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
 
     public async Task RunActuatorLoopAsync()
     {
+        _popup.Input = "Test is started...";
         _popup.NextClicked += Diagnostic.Control.RequestNext;
         _popup.CancelClicked += Diagnostic.Control.RequestStop;
 
