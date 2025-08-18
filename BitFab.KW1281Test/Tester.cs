@@ -385,8 +385,7 @@ namespace BitFab.KW1281Test
             }
         }
 
-        public void DumpMarelliMem(
-            uint address, uint length, ControllerInfo ecuInfo, string? filename)
+        public void DumpMarelliMem(uint address, uint length, ControllerInfo ecuInfo, string? filename)
         {
             if (_controllerAddress != (int)ControllerAddress.Cluster)
             {

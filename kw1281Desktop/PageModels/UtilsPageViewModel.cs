@@ -11,8 +11,8 @@ namespace kw1281Desktop.PageModels;
 
 public sealed class UtilsPageViewModel : BaseScanViewPageModel
 {
-    public ObservableCollection<ObservableAddressValuePair> AddressValuePairs { get; } = new();
-    readonly ActuatorDialogPage _popup = new() { CanBeDismissedByTappingOutsideOfPopup = false }; //TODO
+    public ObservableCollection<ObservableAddressValuePair> AddressValuePairs { get; } = [];
+    readonly ActuatorDialogPage _popup = new() { CanBeDismissedByTappingOutsideOfPopup = false };
 
     public UtilsPageViewModel(Diagnostic diagnostic, ILoaderService loader)
         : base(diagnostic, loader)

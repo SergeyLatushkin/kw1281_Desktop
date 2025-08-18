@@ -6,8 +6,8 @@ namespace kw1281Desktop.PageModels;
 
 public sealed class AppSettingsPageViewModel : BasePropertyChanged
 {
-    public ObservableCollection<int> Bauds { get; } = new() { 4800, AppSettings.BaudDefault, 10400 };
-    public ObservableCollection<string> Ports { get; } = new() { AppSettings.PortDefault, "COM2", "COM3", "COM4" };
+    public ObservableCollection<int> Bauds { get; } = [4800, AppSettings.BaudDefault, 10400];
+    public ObservableCollection<string> Ports { get; } = [AppSettings.PortDefault, "COM2", "COM3", "COM4"];
 
     public AppSettingsPageViewModel()
     {

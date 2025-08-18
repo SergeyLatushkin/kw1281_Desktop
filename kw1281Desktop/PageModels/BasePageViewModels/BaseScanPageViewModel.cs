@@ -25,11 +25,10 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
         _loader = loader;
     }
 
-    public ObservableCollection<LogLineDeck> LogLines { get; } = new();
+    public ObservableCollection<LogLineDeck> LogLines { get; } = [];
 
     public ObservableCollection<ElementItem<string>> Addresses { get; } =
-    new()
-    {
+    [
         new ( "1", "01 - Engine" ),
         new ( "3", "03 - ABS Brakes" ),
         new ( "8", "08 - Auto HVAC" ),
@@ -41,9 +40,9 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
         new ( "46", "46 - Cent. Conv." ),
         new ( "47", "47 - Sound System" ),
         new ( "56", "56 - Radio" ),
-    };
+    ];
 
-    protected async Task ExecuteReadInBackground(string controllerAddress, Commands command,
+    protected virtual async Task ExecuteReadInBackground(string controllerAddress, Commands command,
         bool forceLogsOn = false, params string[] args)
     {
         await Task.Run(async () =>

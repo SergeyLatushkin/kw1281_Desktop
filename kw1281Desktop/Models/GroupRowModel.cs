@@ -6,6 +6,13 @@ namespace kw1281Desktop.Models;
 
 public class GroupRowModel : BasePropertyChanged
 {
+    public GroupRowModel()
+    {
+        Id = Guid.NewGuid();
+    }
+
+    public readonly Guid Id;
+
     private string? _input;
     public string? Input
     {
@@ -13,13 +20,13 @@ public class GroupRowModel : BasePropertyChanged
         set => SetProperty(ref _input, value);
     }
 
-    public ObservableCollection<FieldItem> Fields { get; } = new()
-    {
+    public ObservableCollection<FieldItem> Fields { get; } =
+    [
         new FieldItem { Key = 0, Value = string.Empty },
         new FieldItem { Key = 0, Value = string.Empty },
         new FieldItem { Key = 0, Value = string.Empty },
         new FieldItem { Key = 0, Value = string.Empty }
-    };
+    ];
 
     public ICommand? StartCommand { get; set; }
 }

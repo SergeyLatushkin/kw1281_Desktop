@@ -15,12 +15,11 @@ public sealed class AdaptationPageViewModel : BaseScanViewPageModel
     }
 
     public ObservableCollection<ElementItem<Commands>> CommandList { get; } =
-        new()
-        {
-            new( Commands.AdaptationRead, "Read" ),
-            new( Commands.AdaptationTest, "Test" ),
-            new( Commands.AdaptationSave, "Save" )
-        };
+    [
+        new( Commands.AdaptationRead, "Read" ),
+        new( Commands.AdaptationTest, "Test" ),
+        new( Commands.AdaptationSave, "Save" )
+    ];
 
     private ElementItem<Commands> _selectedCommand;
     public ElementItem<Commands> SelectedCommand
