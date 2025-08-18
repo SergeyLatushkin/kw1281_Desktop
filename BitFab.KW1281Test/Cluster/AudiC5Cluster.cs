@@ -52,11 +52,10 @@ internal class AudiC5Cluster : ICluster
         Thread.Sleep(TimeSpan.FromSeconds(2));
     }
 
-    public string DumpEeprom(uint? address, uint? length, string? dumpFileName)
+    public string DumpEeprom(uint? address, uint? length, string path)
     {
         ArgumentNullException.ThrowIfNull(address);
         ArgumentNullException.ThrowIfNull(length);
-        ArgumentNullException.ThrowIfNull(dumpFileName);
 
         WriteBlock([Constants.Hello]);
 
@@ -100,14 +99,16 @@ internal class AudiC5Cluster : ICluster
 
         if (!succeeded)
         {
-            throw new InvalidOperationException("Unable to login to cluster");
+            throw new InvalidOperationException("Unable to login to cluster.");
         }
         else
         {
             Mc.AddLine("Succeeded");
         }
 
+        string dumpFileName = Path.Combine(path, $"C5_0x{address:X6}_mem.bin");
         Mc.AddLine($"Dumping EEPROM to {dumpFileName}");
+
         DumpEeprom(address.Value, length.Value, maxReadLength: 0x10, dumpFileName);
 
         _kw1281Dialog.SetDisconnected();
@@ -138,11 +139,7 @@ internal class AudiC5Cluster : ICluster
 
         if (!succeeded)
         {
-            Mc.AddLine();
-            Mc.AddLine("**********************************************************************");
-            Mc.AddLine("*** Warning: Some bytes could not be read and were replaced with 0 ***");
-            Mc.AddLine("**********************************************************************");
-            Mc.AddLine();
+            Mc.AddLine("Warning: Some bytes could not be read and were replaced with 0.");
         }
     }
 

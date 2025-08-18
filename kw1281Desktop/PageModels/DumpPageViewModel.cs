@@ -26,7 +26,7 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
     [
         new(Commands.DumpEeprom, "Dump Eeprom", new ("0", true), new ("2048", true)),
         new(Commands.DumpEdc15Eeprom, "Dump Edc15Eeprom"),
-        new(Commands.DumpMarelliMem, "Dump MarelliMem", new ("3072", true), new ("1024", true)),
+        new(Commands.DumpMarelliMem, "Dump Marelli Mem", new ("3072", true), new ("1024", true)),
         new(Commands.DumpMem, "Dump Mem", new ("8192", true), new ("65536", true)),
         new(Commands.DumpRam, "Dump Ram", new ("8192", true), new ("65536", true)),
         new(Commands.DumpRom, "Dump Rom", new ("8192", true), new ("65536", true)),
@@ -99,7 +99,11 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
 
         string[] args = parameters.Where(arg => arg.Item2).Select(arg => arg.Item1).ToArray();
 
-        await ExecuteReadInBackgroundWithLoader(SelectedAddress.Value, SelectedDump.Value, true, args);
+        DataSender.Instance.DataReceived += OnResultReceived;
+
+        await ExecuteReadInBackgroundWithLoader(SelectedAddress.Value, SelectedDump.Value, args);
+
+        DataSender.Instance.DataReceived -= OnResultReceived;
     });
 
     public ICommand ResetCommand => new Command(async () =>

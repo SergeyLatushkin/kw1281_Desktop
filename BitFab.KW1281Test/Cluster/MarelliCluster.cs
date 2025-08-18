@@ -1,4 +1,5 @@
 ﻿using BitFab.KW1281Test.Actions;
+using System.IO;
 
 namespace BitFab.KW1281Test.Cluster
 {
@@ -11,14 +12,15 @@ namespace BitFab.KW1281Test.Cluster
             // Nothing to do
         }
 
-        public string DumpEeprom(uint? address, uint? length, string? dumpFileName)
+        public string DumpEeprom(uint? address, uint? length, string path)
         {
             address ??= GetDefaultAddress();
-            dumpFileName ??= $"marelli_mem_${address:X4}.bin";
 
-            _ = DumpMem(dumpFileName, (ushort)address, (ushort?)length);
+            string filename = Path.Combine(path, $"marelli_mem_${address:X4}.bin");
 
-            return dumpFileName;
+            _ = DumpMem(filename, (ushort)address, (ushort?)length);
+
+            return filename;
         }
 
         private ushort GetDefaultAddress()

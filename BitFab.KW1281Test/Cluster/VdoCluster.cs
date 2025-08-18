@@ -1,6 +1,5 @@
 ﻿using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Blocks;
-using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -35,15 +34,16 @@ namespace BitFab.KW1281Test.Cluster
             }
         }
 
-        public string DumpEeprom(uint? optionalAddress, uint? optionalLength, string? optionalFileName)
+        public string DumpEeprom(uint? optionalAddress, uint? optionalLength, string path)
         {
             var address = optionalAddress ?? 0;
             var length = optionalLength ?? 0x800;
-            var filename = optionalFileName ?? $"VDO_0x{address:X6}_eeprom.bin";
 
-            DumpEeprom((ushort)address, (ushort)length, maxReadLength: 16, filename);
+            string dumpFileName = Path.Combine(path, $"VDO_0x{address:X6}_eeprom.bin");
 
-            return filename;
+            DumpEeprom((ushort)address, (ushort)length, maxReadLength: 16, dumpFileName);
+
+            return dumpFileName;
         }
 
         /// <summary>

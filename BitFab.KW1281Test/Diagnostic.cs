@@ -170,7 +170,6 @@ public class Diagnostic
 
             try
             {
-                await Task.Delay(3000);
                 ecuInfo = tester.Kwp1281Wakeup();
             }
             catch (UnableToProceedException)
@@ -241,7 +240,7 @@ public class Diagnostic
                     tester.GroupRead(groupNumber);
                     break;
                 case Commands.LoadEeprom:
-                    tester.LoadEeprom(address, fileDirectory!);
+                    tester.LoadEeprom(address, fileDirectory);
                     break;
                 case Commands.MapEeprom:
                     tester.MapEeprom(fileDirectory);

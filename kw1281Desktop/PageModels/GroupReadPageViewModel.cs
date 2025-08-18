@@ -41,12 +41,11 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
         await ExecuteReadInBackgroundWithLoader(
             Address,
             !IsBasicSetting ? Commands.GroupRead : Commands.BasicSetting,
-            false,
             row.Id.ToString());
     }
 
     protected override async Task ExecuteReadInBackground(string controllerAddress, Commands command,
-        bool forceLogsOn = false, params string[] args)
+        params string[] args)
     {
         GroupRowModel row = Rows.First(row => row.Id.Equals(Guid.Parse(args[0])));
 

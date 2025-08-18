@@ -43,11 +43,11 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
     ];
 
     protected virtual async Task ExecuteReadInBackground(string controllerAddress, Commands command,
-        bool forceLogsOn = false, params string[] args)
+        params string[] args)
     {
         await Task.Run(async () =>
         {
-            if (!forceLogsOn && !AppSettings.Logging)
+            if (!AppSettings.Logging)
             {
                 await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
 
@@ -68,13 +68,13 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
     }
 
     protected async Task ExecuteReadInBackgroundWithLoader(string controllerAddress, Commands command,
-        bool forceLogsOn = false, params string[] args)
+        params string[] args)
     {
         _loader.ShowAsync();
 
         try
         {
-            await ExecuteReadInBackground(controllerAddress, command, forceLogsOn, args);
+            await ExecuteReadInBackground(controllerAddress, command, args);
         }
         finally
         {

@@ -216,7 +216,7 @@ namespace BitFab.KW1281Test
             if (_controllerAddress != (int)ControllerAddress.CCM &&
                 _controllerAddress != (int)ControllerAddress.CentralLocking)
             {
-                Mc.AddLine("Only supported for CCM and Central Locking");
+                Ds.Error("Only supported for CCM and Central Locking.");
                 return;
             }
 
@@ -257,17 +257,17 @@ namespace BitFab.KW1281Test
 
             if (!succeeded)
             {
-                Mc.Add("**********************************************************************");
-                Mc.Add("*** Warning: Some bytes could not be read and were replaced with 0 ***");
-                Mc.AddLine("**********************************************************************");
+                Ds.Error("Warning: Some bytes could not be read and were replaced with 0.");
             }
+
+            Ds.Send($"Saved Ccm Rom dump to {dumpFileName}.");
         }
 
         public void DumpClusterNecRom(string filename)
         {
             if (_controllerAddress != (int)ControllerAddress.Cluster)
             {
-                Mc.AddLine("Only supported for cluster");
+                Ds.Error("Only supported for cluster.");
                 return;
             }
 
@@ -302,10 +302,10 @@ namespace BitFab.KW1281Test
 
             if (!succeeded)
             {
-                Mc.Add("**********************************************************************");
-                Mc.Add("*** Warning: Some bytes could not be read and were replaced with 0 ***");
-                Mc.AddLine("**********************************************************************");
+                Ds.Error("Warning: Some bytes could not be read and were replaced with 0.");
             }
+
+            Ds.Send($"Saved Cluster Nec Rom dump to {dumpFileName}.");
         }
 
         public void FindLogins(ushort goodLogin, int workshopCode)
@@ -385,37 +385,38 @@ namespace BitFab.KW1281Test
             }
         }
 
-        public void DumpMarelliMem(uint address, uint length, ControllerInfo ecuInfo, string? filename)
+        public void DumpMarelliMem(uint address, uint length, ControllerInfo ecuInfo, string path)
         {
             if (_controllerAddress != (int)ControllerAddress.Cluster)
             {
-                Mc.AddLine("Only supported for clusters");
+                Ds.Error("Only supported for clusters");
+                return;
             }
-            else
-            {
-                ICluster cluster = new MarelliCluster(_kwp1281, ecuInfo.Text);
-                cluster.DumpEeprom(address, length, filename);
-            }
+
+            ICluster cluster = new MarelliCluster(_kwp1281, ecuInfo.Text);
+            string dumpFileName = cluster.DumpEeprom(address, length, path);
+
+            Ds.Send($"Saved Marelli Mem dump to {dumpFileName}");
         }
 
         public void DumpMem(uint address, uint length, string filename)
         {
             if (_controllerAddress != (int)ControllerAddress.Cluster)
             {
-                Mc.AddLine("Only supported for cluster");
+                Ds.Error("Only supported for cluster");
                 return;
             }
 
             DumpClusterMem(address, length, filename);
         }
 
-        public void DumpRam(uint startAddr, uint length, string filename)
+        public void DumpRam(uint startAddr, uint length, string path)
         {
             UnlockControllerForEepromReadWrite();
 
             const int maxReadLength = 8;
             bool succeeded = true;
-            string dumpFileName = Path.Combine(filename, $"ram_${startAddr:X4}.bin");
+            string dumpFileName = Path.Combine(path, $"ram_${startAddr:X4}.bin");
 
             using (var fs = File.Create(dumpFileName, maxReadLength, FileOptions.WriteThrough))
             {
@@ -435,19 +436,20 @@ namespace BitFab.KW1281Test
 
             if (!succeeded)
             {
-                Mc.Add("**********************************************************************");
-                Mc.Add("*** Warning: Some bytes could not be read and were replaced with 0 ***");
-                Mc.AddLine("**********************************************************************");
+                Ds.Error("Warning: Some bytes could not be read and were replaced with 0.");
             }
+
+            Ds.Send($"RAM dump saved to {dumpFileName}.");
         }
 
-        public void DumpRom(uint startAddr, uint length, string? filename)
+        public void DumpRom(uint startAddr, uint length, string path)
         {
             UnlockControllerForEepromReadWrite();
 
             const int maxReadLength = 8;
             bool succeeded = true;
-            string dumpFileName = filename ?? $"rom_0x{startAddr:X4}.bin";
+
+            string dumpFileName = Path.Combine(path, $"rom_0x{startAddr:X4}.bin");
 
             using (var fs = File.Create(dumpFileName, maxReadLength, FileOptions.WriteThrough))
             {
@@ -467,10 +469,10 @@ namespace BitFab.KW1281Test
 
             if (!succeeded)
             {
-                Mc.Add("**********************************************************************");
-                Mc.Add("*** Warning: Some bytes could not be read and were replaced with 0 ***");
-                Mc.AddLine("**********************************************************************");
+                Ds.Error("Warning: Some bytes could not be read and were replaced with 0.");
             }
+
+            Ds.Send($"ROM dump saved to {dumpFileName}.");
         }
 
         /// <summary>
@@ -481,7 +483,7 @@ namespace BitFab.KW1281Test
         {
             if (_controllerAddress != (int)ControllerAddress.Cluster)
             {
-                Mc.AddLine("Only supported for cluster (address 17)");
+                Ds.Error("Only supported for cluster (address 17)");
                 return null;
             }
 
@@ -491,7 +493,9 @@ namespace BitFab.KW1281Test
 
             ICluster cluster = new BoschRBxCluster(kwp2000);
             cluster.UnlockForEepromReadWrite();
-            cluster.DumpEeprom(address, length, dumpFilePath);
+            var dumpFileName = cluster.DumpEeprom(address, length, dumpFilePath);
+
+            Ds.Send($"Saved RBx Mem dump to {dumpFileName}");
 
             return dumpFilePath;
         }
@@ -657,7 +661,7 @@ namespace BitFab.KW1281Test
                 else if (ecuInfo.Text.Contains("M73"))
                 {
                     ICluster cluster = new MarelliCluster(_kwp1281, ecuInfo.Text);
-                    string dumpFileName = cluster.DumpEeprom(address: null, length: null, dumpFileName: string.Empty);
+                    string dumpFileName = cluster.DumpEeprom(null, null, string.Empty);
                     byte[] buf = File.ReadAllBytes(dumpFileName);
                     ushort? skc = MarelliCluster.GetSkc(buf);
                     if (skc.HasValue)
@@ -795,7 +799,7 @@ namespace BitFab.KW1281Test
                     LoadCcmEeprom((ushort)address, filename);
                     break;
                 default:
-                    Mc.AddLine("Only supported for cluster, CCM, Central Locking and Central Electric");
+                    Ds.Error("Only supported for cluster, CCM, Central Locking and Central Electric.");
                     break;
             }
         }
@@ -813,7 +817,7 @@ namespace BitFab.KW1281Test
                     MapCcmEeprom(filename);
                     break;
                 default:
-                    Mc.AddLine("Only supported for cluster, CCM, Central Locking and Central Electric");
+                    Ds.Error("Only supported for cluster, CCM, Central Locking and Central Electric.");
                     break;
             }
         }
@@ -825,12 +829,12 @@ namespace BitFab.KW1281Test
             var blockBytes = _kwp1281.ReadEeprom((ushort)address, 1);
             if (blockBytes == null)
             {
-                Mc.AddLine("EEPROM read failed.");
+                Ds.Error("EEPROM read failed.");
             }
             else
             {
                 var value = blockBytes[0];
-                Mc.AddLine($"Address {address} (${address:X4}): Value {value} (${value:X2}).");
+                Ds.Send($"Address {address} (${address:X4}): Value {value} (${value:X2}).");
             }
         }
 
@@ -841,12 +845,12 @@ namespace BitFab.KW1281Test
             var blockBytes = _kwp1281.ReadRam((ushort)address, 1);
             if (blockBytes == null)
             {
-                Mc.AddLine("RAM read failed");
+                Ds.Error("RAM read failed");
             }
             else
             {
                 var value = blockBytes[0];
-                Mc.AddLine($"Address {address} (${address:X4}): Value {value} (${value:X2}).");
+                Ds.Send($"Address {address} (${address:X4}): Value {value} (${value:X2}).");
             }
         }
 
@@ -857,12 +861,12 @@ namespace BitFab.KW1281Test
             var blockBytes = _kwp1281.ReadRomEeprom((ushort)address, 1);
             if (blockBytes == null)
             {
-                Mc.AddLine("ROM read failed");
+                Ds.Error("ROM read failed");
             }
             else
             {
                 var value = blockBytes[0];
-                Mc.AddLine($"Address {address} (${address:X4}): Value {value} (${value:X2}).");
+                Ds.Send($"Address {address} (${address:X4}): Value {value} (${value:X2}).");
             }
         }
 
@@ -1006,7 +1010,7 @@ namespace BitFab.KW1281Test
 
             Mc.AddLine($"Saving EEPROM dump to {dumpFileName}");
             cluster.DumpEeprom(startAddress, length, dumpFileName);
-            Mc.AddLine($"Saved EEPROM dump to {dumpFileName}");
+            Ds.Send($"Saved Eeprom dump to {dumpFileName}");
 
             return dumpFileName;
         }
@@ -1028,6 +1032,8 @@ namespace BitFab.KW1281Test
             var dumpFileName = Path.Combine(filename, "ccm_eeprom_map.bin");
             Mc.AddLine($"Saving EEPROM map to {dumpFileName}");
             File.WriteAllBytes(dumpFileName, bytes.ToArray());
+
+            Ds.Send($"Saved Ccm Eeprom map to {dumpFileName}");
         }
 
         private void MapClusterEeprom(string filename)
@@ -1039,6 +1045,8 @@ namespace BitFab.KW1281Test
             var mapFileName = Path.Combine(filename, "eeprom_map.bin");
             Mc.AddLine($"Saving EEPROM map to {mapFileName}");
             File.WriteAllBytes(mapFileName, map.ToArray());
+
+            Ds.Send($"Saved EEPROM map to {mapFileName}");
         }
 
         private void DumpCcmEeprom(ushort startAddress, ushort length, string filename)
@@ -1119,9 +1127,7 @@ namespace BitFab.KW1281Test
 
             if (!succeeded)
             {
-                Mc.Add("**********************************************************************");
-                Mc.Add("*** Warning: Some bytes could not be read and were replaced with 0 ***");
-                Mc.AddLine("**********************************************************************");
+                Mc.Add("Warning: Some bytes could not be read and were replaced with 0.");
             }
         }
 
@@ -1155,7 +1161,7 @@ namespace BitFab.KW1281Test
 
             if (!File.Exists(filename))
             {
-                Mc.AddLine($"File {filename} does not exist.");
+                Ds.Error($"File {filename} does not exist.");
                 return;
             }
 
@@ -1164,6 +1170,8 @@ namespace BitFab.KW1281Test
 
             Mc.AddLine("Writing to cluster...");
             WriteEeprom(address, bytes, 8);
+
+            Ds.Send("CCM EEPROM write completed.");
         }
 
         private void LoadClusterEeprom(ushort address, string filename)
@@ -1174,7 +1182,7 @@ namespace BitFab.KW1281Test
 
             if (!File.Exists(filename))
             {
-                Mc.AddLine($"File {filename} does not exist.");
+                Ds.Error($"File {filename} does not exist.");
                 return;
             }
 
@@ -1183,9 +1191,11 @@ namespace BitFab.KW1281Test
 
             Mc.AddLine("Writing to cluster...");
             WriteEeprom(address, bytes, 16);
+
+            Ds.Send("Cluster EEPROM write completed.");
         }
 
-        private void DumpClusterMem(uint startAddress, uint length, string filename)
+        private void DumpClusterMem(uint startAddress, uint length, string path)
         {
             var cluster = new VdoCluster(_kwp1281);
             if (!cluster.RequiresSeedKey())
@@ -1202,12 +1212,12 @@ namespace BitFab.KW1281Test
                 cluster.SeedKeyAuthenticate(softwareVersion);
             }
 
-            var dumpFileName = Path.Combine(filename, $"cluster_mem_${startAddress:X6}.bin");
+            var dumpFileName = Path.Combine(path, $"cluster_mem_${startAddress:X6}.bin");
             Mc.AddLine($"Saving memory dump to {dumpFileName}");
 
             cluster.DumpMem(dumpFileName, startAddress, length);
 
-            Mc.AddLine($"Saved memory dump to {dumpFileName}");
+            Ds.Send($"Saved memory dump to {dumpFileName}");
         }
 
         private static (byte, byte) DecodeClusterId(byte b1, byte b2, byte b3, byte b4)
