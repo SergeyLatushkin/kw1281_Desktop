@@ -43,7 +43,7 @@
                     <Entry WidthRequest="120" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                            Keyboard="Numeric" Placeholder="Code" Text="{Binding CodeWorkshop.Value1, Mode=TwoWay}" >
                         <Entry.Behaviors>
-                            <behaviors:NumericRangeBehavior Min="0" Max="99999" />
+                            <behaviors:NumericRangeBehavior Min="0" Max="32767" />
                         </Entry.Behaviors>
                     </Entry>
                     <Entry WidthRequest="120" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
@@ -150,6 +150,9 @@
             <ScrollView x:Name="ScrollView">
                 <VerticalStackLayout x:Name="LogContainer" Spacing="2" />
             </ScrollView>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="3"/>
+            </Border.StrokeShape>
         </Border>
 
         <Button Grid.Row="2" Grid.Column="0" Text="Run" WidthRequest="90" HorizontalOptions="Start"

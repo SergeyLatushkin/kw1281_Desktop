@@ -1,5 +1,6 @@
 ﻿using BitFab.KW1281Test;
 using BitFab.KW1281Test.Enums;
+using BitFab.KW1281Test.Models;
 using kw1281Desktop.Models;
 using kw1281Desktop.PageModels.BasePageViewModels;
 using System.Collections.ObjectModel;
@@ -15,10 +16,10 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
         InitRows();
     }
 
-    public ObservableCollection<GroupRowModel> Rows { get; } = [];
+    public ObservableCollection<GroupRow> Rows { get; } = [];
 
-    private string _address;
-    public string Address
+    private int _address;
+    public int Address
     {
         get => _address;
         set => SetProperty(ref _address, value);
@@ -31,7 +32,7 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
         set => SetProperty(ref _isBasicSetting, value);
     }
 
-    private async Task ExecuteStart(GroupRowModel row)
+    private async Task ExecuteStart(GroupRow row)
     {
         if (string.IsNullOrWhiteSpace(row.Input))
         {
@@ -44,10 +45,10 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
             row.Id.ToString());
     }
 
-    protected override async Task ExecuteReadInBackground(string controllerAddress, Commands command,
-        params string[] args)
+    protected override async Task ExecuteReadInBackground(int controllerAddress, Commands command,
+        params Args[] args)
     {
-        GroupRowModel row = Rows.First(row => row.Id.Equals(Guid.Parse(args[0])));
+        GroupRow row = Rows.First(row => row.Id.Equals(Guid.Parse(args[0].Get<string>())));
 
         TaskCompletionSource<IBaseResult> tcs = new();
 
@@ -61,12 +62,12 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
 
         DataSender.Instance.DataReceived += handler;
 
-        await Diagnostic.Run(
+        await Diagnostic.RunAsync(
             AppSettings.Port!,
             AppSettings.Baud,
             Address,
             !IsBasicSetting ? Commands.GroupRead : Commands.BasicSetting,
-            row.Input!);
+            (Args) row.Input!);
 
         IBaseResult result = await tcs.Task;
 
@@ -105,7 +106,7 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
     {
         for (int i = 0; i < 5; i++)
         {
-            var row = new GroupRowModel
+            var row = new GroupRow
             {
                 Input = i.ToString()
             };

@@ -1,5 +1,6 @@
 ﻿using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Blocks;
+using BitFab.KW1281Test.Enums;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -39,11 +40,9 @@ namespace BitFab.KW1281Test.Cluster
             var address = optionalAddress ?? 0;
             var length = optionalLength ?? 0x800;
 
-            string dumpFileName = Path.Combine(path, $"VDO_0x{address:X6}_eeprom.bin");
+            DumpEeprom((ushort)address, (ushort)length, maxReadLength: 16, path);
 
-            DumpEeprom((ushort)address, (ushort)length, maxReadLength: 16, dumpFileName);
-
-            return dumpFileName;
+            return path;
         }
 
         /// <summary>
@@ -773,9 +772,7 @@ namespace BitFab.KW1281Test.Cluster
 
             if (!succeeded)
             {
-                Mc.Add("**********************************************************************");
-                Mc.Add("*** Warning: Some bytes could not be read and were replaced with 0 ***");
-                Mc.AddLine("**********************************************************************");
+                Mc.Add("Warning: Some bytes could not be read and were replaced with 0");
             }
         }
 

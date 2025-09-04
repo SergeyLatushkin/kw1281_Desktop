@@ -106,18 +106,16 @@ internal class AudiC5Cluster : ICluster
             Mc.AddLine("Succeeded");
         }
 
-        string dumpFileName = Path.Combine(path, $"C5_0x{address:X6}_mem.bin");
-        Mc.AddLine($"Dumping EEPROM to {dumpFileName}");
+        Mc.AddLine($"Dumping EEPROM to {path}");
 
-        DumpEeprom(address.Value, length.Value, maxReadLength: 0x10, dumpFileName);
+        DumpEeprom(address.Value, length.Value, maxReadLength: 0x10, path);
 
         _kw1281Dialog.SetDisconnected();
 
-        return dumpFileName;
+        return path;
     }
 
-    private void DumpEeprom(
-        uint startAddr, uint length, byte maxReadLength, string fileName)
+    private void DumpEeprom(uint startAddr, uint length, byte maxReadLength, string fileName)
     {
         using var fs = File.Create(fileName, bufferSize: maxReadLength, FileOptions.WriteThrough);
 

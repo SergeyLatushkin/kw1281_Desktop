@@ -2,6 +2,7 @@
 using BitFab.KW1281Test.Enums;
 using System.Windows.Input;
 using kw1281Desktop.PageModels.BasePageViewModels;
+using BitFab.KW1281Test.Models;
 
 namespace kw1281Desktop.PageModels;
 
@@ -17,9 +18,9 @@ public sealed class AutoscanPageViewModel : BaseScanViewPageModel
         DataSender.Instance.DataReceived += OnResultReceived;
 
         await ExecuteReadInBackgroundWithLoader(
-            null!,
+            0,
             Commands.AutoScan,
-            args: Addresses.Select(address => address.Value).ToArray());
+            args: [.. Addresses.Select(address => (Args)address.Value)]);
 
         DataSender.Instance.DataReceived -= OnResultReceived;
     });

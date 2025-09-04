@@ -101,8 +101,6 @@ namespace BitFab.KW1281Test.Cluster
             uint address = optionalAddress ?? 0;
             uint length = optionalLength ?? 0x100;
 
-            string filename = Path.Combine(path, $"BOOMM0_0x{address:X6}_eeprom.bin");
-
 #if false
             var identInfo = _kwp1281.ReadIdent().First().ToString()
             .Split(Environment.NewLine).First() // Sometimes ReadIdent() can return multiple lines

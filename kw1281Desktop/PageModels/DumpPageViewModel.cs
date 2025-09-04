@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using kw1281Desktop.PageModels.BasePageViewModels;
 using WindowsAPICodePack.Dialogs;
+using BitFab.KW1281Test.Models;
 
 namespace kw1281Desktop.PageModels;
 
@@ -15,8 +16,8 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
     {
     }
 
-    private ElementItem<string> _selectedAddress;
-    public ElementItem<string> SelectedAddress
+    private ElementItem<int> _selectedAddress;
+    public ElementItem<int> SelectedAddress
     {
         get => _selectedAddress ?? Addresses.First();
         set => SetProperty(ref _selectedAddress, value);
@@ -97,7 +98,7 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
             (Length, _selectedDump.Length.Item2),
             (FilePath, true)];
 
-        string[] args = parameters.Where(arg => arg.Item2).Select(arg => arg.Item1).ToArray();
+        Args[] args = [.. parameters.Where(arg => arg.Item2).Select(arg => (Args)arg.Item1)];
 
         DataSender.Instance.DataReceived += OnResultReceived;
 

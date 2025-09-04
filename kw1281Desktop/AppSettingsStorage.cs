@@ -2,7 +2,6 @@
 
 namespace kw1281Desktop
 {
-
     public static class AppSettingsStorage
     {
         private static readonly string FilePath = Path.Combine(
@@ -19,7 +18,7 @@ namespace kw1281Desktop
                 Directory.CreateDirectory(dir!);
             }
 
-            var data = Load() ?? new ();
+            var data = Load() ?? new();
 
             data[key] = value!;
 
@@ -45,7 +44,7 @@ namespace kw1281Desktop
 
         private class SerializableSettings
         {
-            public Dictionary<string, object> Settings { get; set; } = new ();
+            public Dictionary<string, object> Settings { get; set; } = new();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace BitFab.KW1281Test
+﻿namespace BitFab.KW1281Test.Enums
 {
     /// <summary>
     /// VW controller addresses

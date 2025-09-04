@@ -4,9 +4,9 @@ using System.Windows.Input;
 
 namespace kw1281Desktop.Models;
 
-public class GroupRowModel : BasePropertyChanged
+public class GroupRow : BasePropertyChanged
 {
-    public GroupRowModel()
+    public GroupRow()
     {
         Id = Guid.NewGuid();
     }

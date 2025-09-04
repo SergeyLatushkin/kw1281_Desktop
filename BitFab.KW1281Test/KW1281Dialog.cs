@@ -1,5 +1,6 @@
 ﻿using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Blocks;
+using BitFab.KW1281Test.Enums;
 using System.Text;
 
 namespace BitFab.KW1281Test

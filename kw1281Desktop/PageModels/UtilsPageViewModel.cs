@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using kw1281Desktop.Extensions;
 using kw1281Desktop.PageModels.BasePageViewModels;
+using BitFab.KW1281Test.Models;
 
 namespace kw1281Desktop.PageModels;
 
@@ -27,8 +28,8 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
         set => SetProperty(ref _selectedCommand, value);
     }
 
-    private ElementItem<string> _selectedAddress;
-    public ElementItem<string> SelectedAddress
+    private ElementItem<int> _selectedAddress;
+    public ElementItem<int> SelectedAddress
     {
         get => _selectedAddress ?? Addresses.First();
         set => SetProperty(ref _selectedAddress, value);
@@ -47,7 +48,7 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
 
     public ICommand RunCommand => new Command(async () =>
     {
-        string[] args = null!;
+        Args[] args = null!;
 
         switch (SelectedCommand)
         {

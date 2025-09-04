@@ -1,5 +1,6 @@
 ﻿using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Cluster;
+using BitFab.KW1281Test.Enums;
 using BitFab.KW1281Test.Interface;
 using BitFab.KW1281Test.Interface.EDC15;
 using BitFab.KW1281Test.Models;
@@ -592,7 +593,7 @@ namespace BitFab.KW1281Test
                         if (partNumberGroups[1] == "919") // Non-CAN
                         {
                             startAddress = 0x1FA;
-                            dumpFileName = DumpClusterEeprom(startAddress, length: 6, filename: string.Empty);
+                            dumpFileName = DumpClusterEeprom(startAddress, length: 6, fileDirectory: string.Empty);
                             buf = File.ReadAllBytes(dumpFileName);
                             skc = Utils.GetBcd(buf, 0);
                             ushort skc2 = Utils.GetBcd(buf, 2);
@@ -605,7 +606,7 @@ namespace BitFab.KW1281Test
                         else if (partNumberGroups[1] == "920") // CAN
                         {
                             startAddress = 0x90;
-                            dumpFileName = DumpClusterEeprom(startAddress, length: 0x7C, filename: string.Empty);
+                            dumpFileName = DumpClusterEeprom(startAddress, length: 0x7C, fileDirectory: string.Empty);
                             buf = File.ReadAllBytes(dumpFileName);
                             skc = VdoCluster.GetSkc(buf, startAddress);
                         }
@@ -679,7 +680,7 @@ namespace BitFab.KW1281Test
 
                     cluster.UnlockForEepromReadWrite();
 
-                    var dumpFileName = DumpBOOClusterEeprom(startAddress: 0, length: 0x10, filename: string.Empty);
+                    var dumpFileName = DumpBOOClusterEeprom(0, 0x10, string.Empty);
 
                     var buf = File.ReadAllBytes(dumpFileName);
                     var skc = Utils.GetBcd(buf, 0x08);
@@ -970,7 +971,7 @@ namespace BitFab.KW1281Test
 
         // End top-level commands
 
-        private string DumpBOOClusterEeprom(ushort startAddress, ushort length, string filename)
+        private string DumpBOOClusterEeprom(ushort startAddress, ushort length, string path)
         {
             var ident = _kwp1281.ReadIdent();
 
@@ -978,15 +979,7 @@ namespace BitFab.KW1281Test
                 .Split(Environment.NewLine).First() // Sometimes ReadIdent() can return multiple lines
                 .Replace(' ', '_');
 
-            var dumpFileName = Path.Combine(filename, $"{identInfo}_${startAddress:X4}_eeprom.bin");
-            foreach (var c in Path.GetInvalidFileNameChars())
-            {
-                dumpFileName = dumpFileName.Replace(c, 'X');
-            }
-            foreach (var c in Path.GetInvalidPathChars())
-            {
-                dumpFileName = dumpFileName.Replace(c, 'X');
-            }
+            var dumpFileName = Path.Combine(path, $"{identInfo}_${startAddress:X4}_eeprom.bin");
 
             Mc.AddLine($"Saving EEPROM dump to {dumpFileName}");
             DumpEeprom(startAddress, length, maxReadLength: 16, dumpFileName);
@@ -995,24 +988,24 @@ namespace BitFab.KW1281Test
             return dumpFileName;
         }
 
-        private string DumpClusterEeprom(ushort startAddress, ushort length, string filename)
+        private string DumpClusterEeprom(ushort startAddress, ushort length, string fileDirectory)
         {
             List<ControllerIdent> ident = _kwp1281.ReadIdent();
 
             var identInfo = ident.First().ToString()
                 .Split(Environment.NewLine).First() // Sometimes ReadIdent() can return multiple lines
-                .Replace(' ', '_').Replace(":", "");
+                .Replace(' ', '_').Replace(":", string.Empty);
 
             ICluster cluster = new VdoCluster(_kwp1281);
             cluster.UnlockForEepromReadWrite();
 
-            var dumpFileName = Path.Combine(filename, $"{identInfo}_${startAddress:X4}_eeprom.bin");
+            var dumpFilePath = Path.Combine(fileDirectory, $"{identInfo}_${startAddress:X4}_eeprom.bin");
 
-            Mc.AddLine($"Saving EEPROM dump to {dumpFileName}");
-            cluster.DumpEeprom(startAddress, length, dumpFileName);
-            Ds.Send($"Saved Eeprom dump to {dumpFileName}");
+            Mc.AddLine($"Saving EEPROM dump to {dumpFilePath}");
+            cluster.DumpEeprom(startAddress, length, dumpFilePath);
+            Ds.Send($"Saved Eeprom dump to {dumpFilePath}");
 
-            return dumpFileName;
+            return dumpFilePath;
         }
 
         private void MapCcmEeprom(string filename)

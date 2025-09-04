@@ -63,6 +63,9 @@
             <ScrollView x:Name="ScrollView">
                 <VerticalStackLayout x:Name="LogContainer" Spacing="2" />
             </ScrollView>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="3"/>
+            </Border.StrokeShape>
         </Border>
     </Grid>
 </ContentPage>

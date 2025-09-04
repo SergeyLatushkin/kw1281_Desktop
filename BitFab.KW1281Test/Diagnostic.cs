@@ -5,7 +5,6 @@ using BitFab.KW1281Test.Interface.EDC15;
 using BitFab.KW1281Test.Models;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
@@ -19,8 +18,8 @@ public class Diagnostic
     public static ActuatorTestControl Control { get; } = new();
     internal static List<string> CommandAndArgs { get; private set; } = [];
 
-    public async Task Run(string portName, int baudRate, string controllerAddressStr, Commands command,
-        params string[] args)
+    public async Task RunAsync(string portName, int baudRate, int controllerAddress, Commands command,
+        params Args[] args)
     {
         try
         {
@@ -32,7 +31,6 @@ public class Diagnostic
             // Ignore if we don't have permission to increase our priority
         }
 
-        int controllerAddress = int.Parse(controllerAddressStr ?? "0", NumberStyles.HexNumber);
         uint address = 0;
         uint length = 0;
         byte value = 0;
@@ -47,10 +45,9 @@ public class Diagnostic
 
         try
         {
-
             if (command.Equals(Commands.ReadEeprom) ||
-              command.Equals(Commands.ReadRAM) ||
-              command.Equals(Commands.ReadROM))
+                command.Equals(Commands.ReadRAM) ||
+                command.Equals(Commands.ReadROM))
             {
                 address = Utils.ParseUint(args[0]);
             }
@@ -78,17 +75,7 @@ public class Diagnostic
             else if (command.Equals(Commands.SetSoftwareCoding))
             {
                 softwareCoding = (int)Utils.ParseUint(args[0]);
-                if (softwareCoding > 32767)
-                {
-                    Mc.AddLine("SoftwareCoding cannot be greater than 32767.");
-                    return;
-                }
                 workshopCode = (int)Utils.ParseUint(args[1]);
-                if (workshopCode > 99999)
-                {
-                    Mc.AddLine("WorkshopCode cannot be greater than 99999.");
-                    return;
-                }
             }
             else if (command.Equals(Commands.DumpEdc15Eeprom) || command.Equals(Commands.MapEeprom))
             {
@@ -100,7 +87,7 @@ public class Diagnostic
 
                 var dateString = DateTime.Now.ToString("s").Replace(':', '-');
                 fileDirectory = $"EDC15_EEPROM_{dateString}.bin";
-                ParseAddressesAndValues(args, out addressValuePairs);
+                ParseAddressesAndValues([.. args.Select(arg => arg)], out addressValuePairs);
             }
             else if (command.Equals(Commands.AdaptationRead))
             {
@@ -144,7 +131,7 @@ public class Diagnostic
             switch (command)
             {
                 case Commands.AutoScan:
-                    AutoScan(@interface, args.Select(arg => int.Parse(arg, NumberStyles.HexNumber)));
+                    AutoScan(@interface, args.Select(arg => (int)arg));
                     return;
                 case Commands.DumpRBxMem:
                     tester.DumpRBxMem(address, length, fileDirectory);
@@ -285,13 +272,13 @@ public class Diagnostic
         }
     }
 
-    private void AutoScan(IInterface @interface, IEnumerable<Int32> addresses)
+    private void AutoScan(IInterface @interface, IEnumerable<int> addresses)
     {
         var kwp1281Addresses = new List<string>();
         var kwp2000Addresses = new List<string>();
         foreach (var evenParity in new bool[] { false, true })
         {
-            var parity = evenParity ? "(EvenParity)" : "";
+            var parity = evenParity ? "(EvenParity)" : string.Empty;
             foreach (int address in addresses)
             {
                 var tester = new Tester(@interface, address);

@@ -1,5 +1,4 @@
 ﻿using BitFab.KW1281Test.Actions;
-using System.IO;
 
 namespace BitFab.KW1281Test.Cluster
 {
@@ -16,11 +15,9 @@ namespace BitFab.KW1281Test.Cluster
         {
             address ??= GetDefaultAddress();
 
-            string filename = Path.Combine(path, $"marelli_mem_${address:X4}.bin");
+            _ = DumpMem(path, (ushort)address, (ushort?)length);
 
-            _ = DumpMem(filename, (ushort)address, (ushort?)length);
-
-            return filename;
+            return path;
         }
 
         private ushort GetDefaultAddress()

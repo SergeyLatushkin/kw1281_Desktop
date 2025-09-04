@@ -1,4 +1,6 @@
-﻿namespace BitFab.KW1281Test.Blocks
+﻿using BitFab.KW1281Test.Enums;
+
+namespace BitFab.KW1281Test.Blocks
 {
     /// <summary>
     /// KWP1281 block

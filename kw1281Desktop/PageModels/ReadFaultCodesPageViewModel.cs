@@ -13,8 +13,8 @@ public sealed class ReadFaultCodesPageViewModel : BaseScanViewPageModel
     {
     }
 
-    private ElementItem<string> _selectedAddress;
-    public ElementItem<string> SelectedAddress
+    private ElementItem<int> _selectedAddress;
+    public ElementItem<int> SelectedAddress
     {
         get => _selectedAddress ?? Addresses.First();
         set => SetProperty(ref _selectedAddress, value);

@@ -18,11 +18,9 @@ namespace BitFab.KW1281Test.Cluster
             uint address = optionalAddress ?? 0x10400;
             uint length = optionalLength ?? 0x400;
 
-            string filename = Path.Combine(path, $"RBx_0x{address:X6}_mem.bin");
+            _kwp2000.DumpMem(address, length, path);
 
-            _kwp2000.DumpMem(address, length, filename);
-
-            return filename;
+            return path;
         }
 
         public bool SecurityAccess(byte accessMode)

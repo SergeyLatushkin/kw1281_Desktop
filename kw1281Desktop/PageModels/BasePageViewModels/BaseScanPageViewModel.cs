@@ -1,11 +1,12 @@
-using System.Collections.ObjectModel;
 using BitFab.KW1281Test;
 using BitFab.KW1281Test.Actions;
 using BitFab.KW1281Test.Actions.Records;
 using BitFab.KW1281Test.Enums;
+using BitFab.KW1281Test.Models;
 using kw1281Desktop.Converters;
 using kw1281Desktop.Models;
 using kw1281Desktop.Models.Base;
+using System.Collections.ObjectModel;
 
 namespace kw1281Desktop.PageModels.BasePageViewModels;
 
@@ -27,48 +28,50 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
 
     public ObservableCollection<LogLineDeck> LogLines { get; } = [];
 
-    public ObservableCollection<ElementItem<string>> Addresses { get; } =
+    public ObservableCollection<ElementItem<int>> Addresses { get; } =
     [
-        new ( "1", "01 - Engine" ),
-        new ( "3", "03 - ABS Brakes" ),
-        new ( "8", "08 - Auto HVAC" ),
-        new ( "15", "15 - Airbags" ),
-        new ( "17", "17 - Instruments" ),
-        new ( "19", "19 - CAN Gateway" ),
-        new ( "25", "25 - Immobilizer" ),
-        new ( "37", "37 - Navigation" ),
-        new ( "46", "46 - Cent. Conv." ),
-        new ( "47", "47 - Sound System" ),
-        new ( "56", "56 - Radio" ),
+        new ( 0x01, "01 - Engine" ),
+        new ( 0x03, "03 - ABS Brakes" ),
+        new ( 0x08, "08 - Auto HVAC" ),
+        new ( 0x15, "15 - Airbags" ),
+        new ( 0x17, "17 - Instruments" ),
+        new ( 0x19, "19 - CAN Gateway" ),
+        new ( 0x25, "25 - Immobilizer" ),
+        new ( 0x37, "37 - Navigation" ),
+        new ( 0x46, "46 - Cent. Conv." ),
+        new ( 0x47, "47 - Sound System" ),
+        new ( 0x56, "56 - Radio" ),
     ];
 
-    protected virtual async Task ExecuteReadInBackground(string controllerAddress, Commands command,
-        params string[] args)
+    protected virtual async Task ExecuteReadInBackground(int controllerAddress, Commands command,
+        params Args[] args)
     {
         await Task.Run(async () =>
         {
-            if (!AppSettings.Logging)
-            {
-                await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
+            async Task RunAsync() => await Diagnostic
+                .RunAsync(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
 
-                return;
+            if (AppSettings.Logging)
+            {
+                try
+                {
+                    Messenger.Instance.MessageReceived += OnLogReceived;
+                    await RunAsync();
+                }
+                finally
+                {
+                    Messenger.Instance.MessageReceived -= OnLogReceived;
+                }
             }
-
-            try
+            else
             {
-                Messenger.Instance.MessageReceived += OnLogReceived;
-
-                await Diagnostic.Run(AppSettings.Port!, AppSettings.Baud, controllerAddress, command, args);
-            }
-            finally
-            {
-                Messenger.Instance.MessageReceived -= OnLogReceived;
+                await RunAsync();
             }
         });
     }
 
-    protected async Task ExecuteReadInBackgroundWithLoader(string controllerAddress, Commands command,
-        params string[] args)
+    protected async Task ExecuteReadInBackgroundWithLoader(int controllerAddress, Commands command,
+        params Args[] args)
     {
         _loader.ShowAsync();
 

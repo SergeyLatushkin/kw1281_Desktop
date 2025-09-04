@@ -1,8 +1,5 @@
-﻿using System;
+﻿namespace BitFab.KW1281Test;
 
-namespace BitFab.KW1281Test
+class UnableToProceedException : Exception
 {
-    class UnableToProceedException : Exception
-    {
-    }
 }
