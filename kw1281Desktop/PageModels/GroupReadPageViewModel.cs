@@ -46,7 +46,7 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
     }
 
     protected override async Task ExecuteReadInBackground(int controllerAddress, Commands command,
-        params Args[] args)
+        params Arg[] args)
     {
         GroupRow row = Rows.First(row => row.Id.Equals(Guid.Parse(args[0].Get<string>())));
 
@@ -67,7 +67,7 @@ public sealed class GroupReadPageViewModel : BaseScanViewPageModel
             AppSettings.Baud,
             Address,
             !IsBasicSetting ? Commands.GroupRead : Commands.BasicSetting,
-            (Args) row.Input!);
+            (Arg) row.Input!);
 
         IBaseResult result = await tcs.Task;
 

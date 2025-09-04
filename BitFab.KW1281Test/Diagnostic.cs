@@ -19,7 +19,7 @@ public class Diagnostic
     internal static List<string> CommandAndArgs { get; private set; } = [];
 
     public async Task RunAsync(string portName, int baudRate, int controllerAddress, Commands command,
-        params Args[] args)
+        params Arg[] args)
     {
         try
         {

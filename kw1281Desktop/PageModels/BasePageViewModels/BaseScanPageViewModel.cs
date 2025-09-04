@@ -43,8 +43,7 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
         new ( 0x56, "56 - Radio" ),
     ];
 
-    protected virtual async Task ExecuteReadInBackground(int controllerAddress, Commands command,
-        params Args[] args)
+    protected virtual async Task ExecuteReadInBackground(int controllerAddress, Commands command, params Arg[] args)
     {
         await Task.Run(async () =>
         {
@@ -70,8 +69,7 @@ public abstract class BaseScanViewPageModel : BasePropertyChanged
         });
     }
 
-    protected async Task ExecuteReadInBackgroundWithLoader(int controllerAddress, Commands command,
-        params Args[] args)
+    protected async Task ExecuteReadInBackgroundWithLoader(int controllerAddress, Commands command, params Arg[] args)
     {
         _loader.ShowAsync();
 

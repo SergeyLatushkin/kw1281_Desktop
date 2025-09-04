@@ -6,9 +6,9 @@ namespace kw1281Desktop.Extensions
 {
     internal static class ObservableCollectionExtension
     {
-        public static Args[] FlattenPairs(this ObservableCollection<ObservableAddressValuePair> pairs)
+        public static Arg[] FlattenPairs(this ObservableCollection<ObservableAddressValuePair> pairs)
         {
-            var result = new List<Args>(pairs.Count * 2);
+            var result = new List<Arg>(pairs.Count * 2);
             foreach (ObservableAddressValuePair pair in pairs)
             {
                 result.Add(pair.Address ?? string.Empty);

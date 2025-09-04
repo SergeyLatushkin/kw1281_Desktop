@@ -20,7 +20,7 @@ public sealed class AutoscanPageViewModel : BaseScanViewPageModel
         await ExecuteReadInBackgroundWithLoader(
             0,
             Commands.AutoScan,
-            args: [.. Addresses.Select(address => (Args)address.Value)]);
+            args: [.. Addresses.Select(address => (Arg)address.Value)]);
 
         DataSender.Instance.DataReceived -= OnResultReceived;
     });

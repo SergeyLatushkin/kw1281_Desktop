@@ -48,7 +48,7 @@ public sealed class UtilsPageViewModel : BaseScanViewPageModel
 
     public ICommand RunCommand => new Command(async () =>
     {
-        Args[] args = null!;
+        Arg[] args = null!;
 
         switch (SelectedCommand)
         {

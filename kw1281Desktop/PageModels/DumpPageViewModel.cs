@@ -25,18 +25,18 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
 
     public ObservableCollection<DumpItem> DumpCommands { get; } =
     [
-        new(Commands.DumpEeprom, "Dump Eeprom", new ("0", true), new ("2048", true)),
+        new(Commands.DumpEeprom, "Dump Eeprom", new("0", true), new("2048", true)),
         new(Commands.DumpEdc15Eeprom, "Dump Edc15Eeprom"),
-        new(Commands.DumpMarelliMem, "Dump Marelli Mem", new ("3072", true), new ("1024", true)),
-        new(Commands.DumpMem, "Dump Mem", new ("8192", true), new ("65536", true)),
-        new(Commands.DumpRam, "Dump Ram", new ("8192", true), new ("65536", true)),
-        new(Commands.DumpRom, "Dump Rom", new ("8192", true), new ("65536", true)),
-        new(Commands.DumpRBxMem, "Dump RBxMem", new ("66560", true), new ("1024", true)),
+        new(Commands.DumpMarelliMem, "Dump Marelli Mem", new("3072", true), new("1024", true)),
+        new(Commands.DumpMem, "Dump Mem", new("8192", true), new("65536", true)),
+        new(Commands.DumpRam, "Dump Ram", new("8192", true), new("65536", true)),
+        new(Commands.DumpRom, "Dump Rom", new("8192", true), new("65536", true)),
+        new(Commands.DumpRBxMem, "Dump RBxMem", new ("66560", true), new("1024", true)),
         new(Commands.DumpRBxMemOdd, "Dump RBxMemOdd"),
         new(Commands.DumpCcmRom, "Dump CcmRom"),
         new(Commands.DumpClusterNecRom, "Dump RBxMemOdd"),
-        new(Commands.ReadEeprom, "Read Eeprom", new ("4361", true), new (null!, false)),
-        new(Commands.ReadRAM, "Read RAM", new ("4361", true), new (null!, false)),
+        new(Commands.ReadEeprom, "Read Eeprom", new("4361", true), new(null!, false)),
+        new(Commands.ReadRAM, "Read RAM", new("4361", true), new(null!, false)),
         new(Commands.ReadROM, "Read ROM", new("4361", true), new(null!, false)),
         new(Commands.LoadEeprom, "Load Eeprom", new ("0", true), new(null!, false)),
         new(Commands.MapEeprom, "Map Eeprom")
@@ -98,7 +98,7 @@ public sealed class DumpPageViewModel : BaseScanViewPageModel
             (Length, _selectedDump.Length.Item2),
             (FilePath, true)];
 
-        Args[] args = [.. parameters.Where(arg => arg.Item2).Select(arg => (Args)arg.Item1)];
+        Arg[] args = [.. parameters.Where(arg => arg.Item2).Select(arg => (Arg)arg.Item1)];
 
         DataSender.Instance.DataReceived += OnResultReceived;
 

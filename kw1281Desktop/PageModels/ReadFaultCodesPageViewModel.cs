@@ -24,9 +24,7 @@ public sealed class ReadFaultCodesPageViewModel : BaseScanViewPageModel
     {
         DataSender.Instance.DataReceived += OnResultReceived;
 
-        await ExecuteReadInBackgroundWithLoader(
-            SelectedAddress.Value,
-            Enum.Parse<Commands>(command.ToString()!));
+        await ExecuteReadInBackgroundWithLoader(SelectedAddress.Value, Enum.Parse<Commands>(command.ToString()!));
 
         DataSender.Instance.DataReceived -= OnResultReceived;
     });
